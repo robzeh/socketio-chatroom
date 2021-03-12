@@ -1,6 +1,7 @@
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { PORT, ORIGIN } from './utils/env';
+import { MangaSocket } from './types';
 import express from 'express';
 
 const app = express();
@@ -12,7 +13,7 @@ const io = new Server(httpServer, {
   }
 })
 
-io.on('connection', (socket) => {
+io.on('connection', (socket: MangaSocket) => {
   console.log(socket.id);
 })
 

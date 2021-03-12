@@ -1,9 +1,15 @@
 import { Socket } from 'socket.io';
 
 interface MangaSocket extends Socket {
-  sessionId: number,
+  sessionId: string,
   username: string,
   roomId: string
 };
 
-export { MangaSocket };
+// include sessionId?
+interface Session {
+  username: string,
+  roomId: string
+};
+
+export { MangaSocket, Session };

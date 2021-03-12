@@ -1,0 +1,7 @@
+{
+  "name": "manga2gether",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}

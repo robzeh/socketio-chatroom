@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
-import { User, UserContextType } from '../types';
+import { RoomResponse, User, UserContextType } from '../types';
 
 type HomeProps = {
 
@@ -13,6 +13,7 @@ const Home = ({ }: HomeProps) => {
   const { userDetails, setUserDetails }: UserContextType = useUser();
   const socket: SocketService = useSocket();
   const history = useHistory();
+  const [roomId, setRoomId] = React.useState<string>('');
 
   // if no username, push back to login
   React.useEffect(() => {
@@ -24,8 +25,8 @@ const Home = ({ }: HomeProps) => {
   // initialize socket
   React.useEffect(() => {
     socket.init(userDetails);
-    // return () => socket.disconnect();
-  }, [socket]); // should dep array be socket? or just run on mount
+    return () => socket.disconnect();
+  }, []); // should dep array be socket? or just run on mount
 
   // get updated userDetails from server, socket.on('SESSION)
   React.useEffect(() => {
@@ -41,11 +42,28 @@ const Home = ({ }: HomeProps) => {
   }, [socket]);
 
   // try to join last room
+  React.useEffect(() => {
+    if (userDetails.roomId) {
+      const tryRoom = async () => {
+        const res: RoomResponse = await socket.joinRoom(userDetails.sessionId, userDetails.roomId);
+        if (res.success) {
+          setRoomId(res.roomId);
+        } else {
+          setRoomId('');
+        }
+      };
+      tryRoom();
+    }
+  }, []);
 
   return (
-    <div>
-      Hello
-    </div>
+    <>
+      {roomId ? (
+        <div>ROOM</div>
+      ) : (
+        <div>CHOOSE A ROOM</div>
+      )}
+    </>
   );
 };
 

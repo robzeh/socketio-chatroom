@@ -58,6 +58,11 @@ class SocketService {
     });
   };
 
+  disconnect(): void {
+    console.log('Disconnecting socket');
+    this.#socket.disconnect();
+  };
+
 };
 
 export { SocketService };

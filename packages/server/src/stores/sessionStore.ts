@@ -13,7 +13,7 @@ class SessionStore {
 
   // is sessionId really a number? i think its suppose to be string
   async findSession(sessionId: string): Promise<Session> {
-    const res = await this.redisClient.hmget(`session:${sessionId}`, 'username', 'roomId');
+    const res: string[] = await this.redisClient.hmget(`session:${sessionId}`, 'username', 'roomId');
     return ({
       username: res[0],
       roomId: res[1]

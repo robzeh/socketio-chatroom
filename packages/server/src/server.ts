@@ -2,8 +2,8 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { PORT, ORIGIN } from './utils/env';
-import { JoinRoomRequest, MangaSocket, RoomRequest, RoomResponse } from './types';
-import { sessionStore } from './stores/stores';
+import { JoinRoomRequest, MangaSocket, RoomRequest, RoomResponse, Session } from './types';
+import { sessionStore, roomStore } from './stores/stores';
 import express from 'express';
 import cors from 'cors';
 
@@ -31,8 +31,6 @@ io.use(async (socket: MangaSocket, next: (err?: any) => void) => {
       socket.username = session.username,
         socket.roomId = session.roomId
 
-      // save to user store
-
       return next();
     }
   }
@@ -43,17 +41,16 @@ io.use(async (socket: MangaSocket, next: (err?: any) => void) => {
   socket.username = username;
   socket.roomId = ''; // new user has no existing room to join
 
-  // save to userstore
-
   next();
 });
 
-io.on('connection', (socket: MangaSocket) => {
+io.on('connection', async (socket: MangaSocket) => {
   console.log(`${socket.username} connected`);
   // check if their last room is still active
   let roomId = socket.roomId;
-  // find in roomstore
-  console.log(socket.username);
+  if (!await roomStore.findRoom(socket.roomId)) {
+    roomId = ''; // room doesnt exist
+  }
 
   // save session
   sessionStore.saveSession(socket.sessionId, {
@@ -71,10 +68,12 @@ io.on('connection', (socket: MangaSocket) => {
   socket.on('CREATE_ROOM', async ({ sessionId }: RoomRequest, cb: (res: RoomResponse) => void) => {
     // create 6 digit room id
     const roomId: string = Math.floor(100000 + Math.random() * 900000).toString();
+
     // save to room store with ownerId as sessionId
+    roomStore.saveRoom(roomId, sessionId);
 
     // update session
-    const session = await sessionStore.findSession(sessionId);
+    const session: Session = await sessionStore.findSession(sessionId);
     sessionStore.saveSession(sessionId, {
       ...session,
       roomId: roomId
@@ -94,10 +93,10 @@ io.on('connection', (socket: MangaSocket) => {
 
   socket.on('JOIN_ROOM', async ({ sessionId, roomId }: JoinRoomRequest, cb: (res: RoomResponse) => void) => {
     // check if room exists
-    const room = true;
+    const room: number = await roomStore.findRoom(roomId);
     if (room) {
       // update session
-      const session = await sessionStore.findSession(sessionId);
+      const session: Session = await sessionStore.findSession(sessionId);
       sessionStore.saveSession(sessionId, {
         ...session,
         roomId: roomId
@@ -119,6 +118,11 @@ io.on('connection', (socket: MangaSocket) => {
     }
   });
 
+  // socket.io automatically removes empty rooms, remove from our store too
+  io.of('/').adapter.on('delete-room', (room: string) => {
+    roomStore.removeRoom(room);
+    // remove room from room users store
+  });
 
 })
 

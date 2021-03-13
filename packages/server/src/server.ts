@@ -3,7 +3,7 @@ import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { PORT, ORIGIN } from './utils/env';
 import { JoinRoomRequest, MangaSocket, RoomRequest, RoomResponse, Session } from './types';
-import { sessionStore, roomStore } from './stores/stores';
+import { sessionStore, roomStore, roomUserStore } from './stores/stores';
 import express from 'express';
 import cors from 'cors';
 
@@ -80,6 +80,7 @@ io.on('connection', async (socket: MangaSocket) => {
     });
 
     // save to room users store
+    roomUserStore.saveRoomUser(roomId, sessionId);
 
     // join room 
     socket.join(roomId);
@@ -103,6 +104,7 @@ io.on('connection', async (socket: MangaSocket) => {
       });
 
       // save to room users store
+      roomUserStore.saveRoomUser(roomId, sessionId);
 
       // emit to room that user joined
 
@@ -118,16 +120,30 @@ io.on('connection', async (socket: MangaSocket) => {
     }
   });
 
+  socket.on('disconnect', async () => {
+    console.log(`Bye ${socket.username}`);
+
+    // if user was in room, remove from room and emit to room
+    const session = await sessionStore.findSession(socket.sessionId);
+    // pretty sure session.roomId is either always valid or '' by this point
+    if (session.roomId) {
+      roomUserStore.removeRoomUser(session.roomId, socket.sessionId);
+      // emit to room that user left
+      // io.to(roomid)
+    }
+  });
+
   // socket.io automatically removes empty rooms, remove from our store too
   io.of('/').adapter.on('delete-room', (room: string) => {
     roomStore.removeRoom(room);
     // remove room from room users store
+    roomUserStore.removeRoom(room);
   });
 
-})
+});
 
 httpServer.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
-})
+});
 
 

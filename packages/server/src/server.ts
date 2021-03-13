@@ -2,7 +2,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { PORT, ORIGIN } from './utils/env';
-import { MangaSocket } from './types';
+import { JoinRoomRequest, MangaSocket, RoomRequest, RoomResponse } from './types';
 import { sessionStore } from './stores/stores';
 import express from 'express';
 import cors from 'cors';
@@ -67,6 +67,58 @@ io.on('connection', (socket: MangaSocket) => {
     sessionId: socket.sessionId,
     roomId: socket.roomId
   });
+
+  socket.on('CREATE_ROOM', async ({ sessionId }: RoomRequest, cb: (res: RoomResponse) => void) => {
+    // create 6 digit room id
+    const roomId: string = Math.floor(100000 + Math.random() * 900000).toString();
+    // save to room store with ownerId as sessionId
+
+    // update session
+    const session = await sessionStore.findSession(sessionId);
+    sessionStore.saveSession(sessionId, {
+      ...session,
+      roomId: roomId
+    });
+
+    // save to room users store
+
+    // join room 
+    socket.join(roomId);
+
+    // send roomId back to user
+    cb({
+      success: true,
+      roomId: roomId
+    });
+  });
+
+  socket.on('JOIN_ROOM', async ({ sessionId, roomId }: JoinRoomRequest, cb: (res: RoomResponse) => void) => {
+    // check if room exists
+    const room = true;
+    if (room) {
+      // update session
+      const session = await sessionStore.findSession(sessionId);
+      sessionStore.saveSession(sessionId, {
+        ...session,
+        roomId: roomId
+      });
+
+      // save to room users store
+
+      // emit to room that user joined
+
+      cb({
+        success: true,
+        roomId: roomId
+      });
+    } else {
+      cb({
+        success: false,
+        roomId: ''
+      });
+    }
+  });
+
 
 })
 

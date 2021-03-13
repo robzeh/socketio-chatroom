@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { fromEvent, Observable } from 'rxjs';
 import { User } from '../types';
 
 class SocketService {
@@ -16,6 +17,12 @@ class SocketService {
       },
     );
     return this;
+  };
+
+  // session details from server on initialize 
+  onSession(): Observable<User> {
+    // @ts-ignore
+    return fromEvent(this.#socket, 'SESSION');
   };
 
 }

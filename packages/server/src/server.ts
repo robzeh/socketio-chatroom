@@ -5,7 +5,6 @@ import { PORT, ORIGIN } from './utils/env';
 import { MangaSocket } from './types';
 import { sessionStore } from './stores/stores';
 import express from 'express';
-import { loginRouter } from './controllers/login';
 import cors from 'cors';
 
 const app = express();
@@ -18,8 +17,6 @@ const io = new Server(httpServer, {
     methods: ['GET', 'POST']
   }
 });
-
-app.use('/login', loginRouter);
 
 // socket middleware, check if in sessionStore
 // next type: err?: ExtendedError, idk if to include
@@ -52,7 +49,25 @@ io.use(async (socket: MangaSocket, next: (err?: any) => void) => {
 });
 
 io.on('connection', (socket: MangaSocket) => {
-  console.log(socket.id);
+  console.log(`${socket.username} connected`);
+  // check if their last room is still active
+  let roomId = socket.roomId;
+  // find in roomstore
+  console.log(socket.username);
+
+  // save session
+  sessionStore.saveSession(socket.sessionId, {
+    username: socket.username,
+    roomId: roomId
+  });
+
+  // emit session details to user
+  socket.emit('SESSION', {
+    username: socket.username,
+    sessionId: socket.sessionId,
+    roomId: socket.roomId
+  });
+
 })
 
 httpServer.listen(PORT, () => {

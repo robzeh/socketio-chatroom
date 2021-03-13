@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 import { useUser } from '../contexts/UserProvider';
-import { login } from '../services/loginService';
-import { User, UserContextType } from '../types';
+import { UserContextType } from '../types';
 
 const Login = () => {
   const usernameRef = React.useRef<HTMLInputElement | null>(null);
@@ -20,20 +19,14 @@ const Login = () => {
     e.preventDefault();
 
     if (usernameRef.current !== null) {
-      const response: User = await login({
+      setUserDetails({
         username: usernameRef.current.value,
         sessionId: userDetails.sessionId,
-        roomId: userDetails.roomId
+        roomId: userDetails.roomId,
       });
-
-      setUserDetails({
-        username: response.username,
-        sessionId: response.sessionId,
-        roomId: response.roomId,
-      });
+      history.push('/home');
     };
 
-    history.push('/home');
   };
 
   return (
@@ -41,7 +34,7 @@ const Login = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>Name</label>
-          <input type='text' name='name' ref={usernameRef} />
+          <input type='text' name='username' ref={usernameRef} />
         </div>
         <div>
           <button type='submit'>Join</button>

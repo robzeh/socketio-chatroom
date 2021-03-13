@@ -30,7 +30,8 @@ class SessionStore {
         'roomId',
         roomId
       )
-      .expire(`session:${sessionId}`, SESSION_TTL);
+      .expire(`session:${sessionId}`, SESSION_TTL)
+      .exec();
   }
 
 };

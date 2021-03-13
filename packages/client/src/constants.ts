@@ -1,6 +1,6 @@
 const INITIAL_USER_DETAILS = {
   username: '',
-  sessionId: null,
+  sessionId: '',
   roomId: '',
 };
 

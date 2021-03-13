@@ -12,8 +12,4 @@ interface Session {
   roomId: string
 };
 
-interface UserSession extends Session {
-  sessionId: string
-};
-
-export { MangaSocket, Session, UserSession };
+export { MangaSocket, Session };

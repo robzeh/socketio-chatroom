@@ -1,6 +1,6 @@
 interface User {
   username: string,
-  sessionId: number | null,
+  sessionId: string,
   roomId: string
 };
 

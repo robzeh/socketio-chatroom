@@ -59,7 +59,7 @@ const Home = ({ }: HomeProps) => {
     }
   }, []);
 
-  const createRoom = async (e: React.FormEvent) => {
+  const createRoom = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // create room and set room id
@@ -74,7 +74,7 @@ const Home = ({ }: HomeProps) => {
     }
   };
 
-  const joinRoom = async (e: React.FormEvent) => {
+  const joinRoom = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // attempt to join room and set roomid if valid

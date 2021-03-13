@@ -4,4 +4,9 @@ interface User {
   roomId: string
 };
 
-export type { User };
+interface UserContextType {
+  userDetails: User,
+  setUserDetails: (userDetails: User) => void;
+};
+
+export type { User, UserContextType };

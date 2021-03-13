@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { fromEvent, Observable } from 'rxjs';
-import { User } from '../types';
+import { RoomResponse, User } from '../types';
 
 class SocketService {
   #socket: Socket = {} as Socket;
@@ -25,6 +25,39 @@ class SocketService {
     return fromEvent(this.#socket, 'SESSION');
   };
 
-}
+  createRoom(sessionId: string): Promise<RoomResponse> {
+    return new Promise((resolve) => {
+      this.#socket.emit('CREATE_ROOM', sessionId, (res: RoomResponse) => {
+        if (res.success) {
+          resolve({
+            success: true,
+            roomId: res.roomId
+          });
+        }
+      });
+    });
+  };
+
+  joinRoom(sessionId: string, roomId: string): Promise<RoomResponse> {
+    return new Promise((resolve) => {
+      this.#socket.emit('JOIN_ROOM', sessionId, roomId, (res: RoomResponse) => {
+        if (res.success) {
+          resolve({
+            success: true,
+            roomId: res.roomId
+          });
+        } else {
+          // room does not exist
+          console.log(`${roomId} does not exist`)
+          resolve({
+            success: false,
+            roomId: ''
+          });
+        }
+      });
+    });
+  };
+
+};
 
 export { SocketService };

@@ -9,4 +9,9 @@ interface UserContextType {
   setUserDetails: (userDetails: User) => void;
 };
 
-export type { User, UserContextType };
+interface RoomResponse {
+  success: boolean,
+  roomId: string
+};
+
+export type { User, UserContextType, RoomResponse };

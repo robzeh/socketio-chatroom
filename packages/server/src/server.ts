@@ -2,7 +2,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { PORT, ORIGIN } from './utils/env';
-import { JoinRoomRequest, MangaSocket, RoomRequest, RoomResponse, Session } from './types';
+import { MangaSocket, RoomResponse, Session } from './types';
 import { sessionStore, roomStore, roomUserStore } from './stores/stores';
 import express from 'express';
 import cors from 'cors';
@@ -65,7 +65,7 @@ io.on('connection', async (socket: MangaSocket) => {
     roomId: socket.roomId
   });
 
-  socket.on('CREATE_ROOM', async ({ sessionId }: RoomRequest, cb: (res: RoomResponse) => void) => {
+  socket.on('CREATE_ROOM', async (sessionId: string, cb: (res: RoomResponse) => void) => {
     // create 6 digit room id
     const roomId: string = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -92,7 +92,7 @@ io.on('connection', async (socket: MangaSocket) => {
     });
   });
 
-  socket.on('JOIN_ROOM', async ({ sessionId, roomId }: JoinRoomRequest, cb: (res: RoomResponse) => void) => {
+  socket.on('JOIN_ROOM', async (sessionId: string, roomId: string, cb: (res: RoomResponse) => void) => {
     // check if room exists
     const room: number = await roomStore.findRoom(roomId);
     if (room) {
@@ -118,6 +118,30 @@ io.on('connection', async (socket: MangaSocket) => {
         roomId: ''
       });
     }
+  });
+
+  socket.on('LEAVE_ROOM', async (sessionId: string, cb: (res: RoomResponse) => void) => {
+    // remove user from room
+    const session: Session = await sessionStore.findSession(sessionId);
+    const roomId: string = session.roomId;
+    socket.leave(roomId);
+
+    // update session
+    sessionStore.saveSession(sessionId, {
+      ...session,
+      roomId: ''
+    });
+
+    // emit to room, username or session id???
+    //io.to(roomId).emit('USER_LEFT', session.username);
+
+    // remove from room user store\
+    roomUserStore.removeRoomUser(roomId, sessionId);
+
+    cb({
+      success: true,
+      roomId: ''
+    });
   });
 
   socket.on('disconnect', async () => {

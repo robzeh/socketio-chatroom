@@ -25,6 +25,11 @@ class SocketService {
     return fromEvent(this.#socket, 'SESSION');
   };
 
+  //onLeave(): Observable<string> {
+  //  // @ts-ignore
+  //  return fromEvent(this.#socket, 'USER_LEFT');
+  //}
+
   createRoom(sessionId: string): Promise<RoomResponse> {
     return new Promise((resolve) => {
       this.#socket.emit('CREATE_ROOM', sessionId, (res: RoomResponse) => {
@@ -52,6 +57,19 @@ class SocketService {
           resolve({
             success: false,
             roomId: ''
+          });
+        }
+      });
+    });
+  };
+
+  leaveRoom(sessionId: string): Promise<RoomResponse> {
+    return new Promise((resolve) => {
+      this.#socket.emit('LEAVE_ROOM', sessionId, (res: RoomResponse) => {
+        if (res.success) {
+          resolve({
+            success: true,
+            roomId: res.roomId
           });
         }
       });

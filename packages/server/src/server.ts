@@ -5,15 +5,21 @@ import { PORT, ORIGIN } from './utils/env';
 import { MangaSocket } from './types';
 import { sessionStore } from './stores/stores';
 import express from 'express';
+import { loginRouter } from './controllers/login';
+import cors from 'cors';
 
 const app = express();
+app.use(express.json());
+app.use(cors());
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: ORIGIN,
     methods: ['GET', 'POST']
   }
-})
+});
+
+app.use('/login', loginRouter);
 
 // socket middleware, check if in sessionStore
 // next type: err?: ExtendedError, idk if to include

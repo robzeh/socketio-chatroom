@@ -6,6 +6,8 @@ type HomeProps = {
 
 const Home = ({ }: HomeProps) => {
 
+  // initialize socket
+
   return (
     <div>
       Hello

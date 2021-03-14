@@ -20,6 +20,14 @@ class RoomUserStore {
     return await this.redisClient.smembers(`users:${roomId}`);
   };
 
+  async isRoomUser(roomId: string, sessionId: string): Promise<number> {
+    return await this.redisClient.sismember(`users:${roomId}`, sessionId);
+  };
+
+  async roomSize(roomId: string): Promise<number> {
+    return await this.redisClient.scard(`users:${roomId}`);
+  }
+
   removeRoom(roomId: string): void {
     this.redisClient.del(`users:${roomId}`);
   };

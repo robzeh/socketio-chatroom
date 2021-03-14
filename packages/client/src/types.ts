@@ -1,3 +1,5 @@
+import { DefaultEventsMap, EventsMap } from 'socket.io-client/build/typed-events';
+
 interface User {
   username: string,
   sessionId: string,
@@ -14,4 +16,10 @@ interface RoomResponse {
   roomId: string
 };
 
-export type { User, UserContextType, RoomResponse };
+interface ClientToServerEvents extends EventsMap {
+};
+
+interface ServerToClientEvents {
+}
+
+export type { User, UserContextType, RoomResponse, ClientToServerEvents, ServerToClientEvents };

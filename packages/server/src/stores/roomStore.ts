@@ -12,6 +12,10 @@ class RoomStore {
     return await this.redisClient.hexists(`rooms:${roomId}`, 'ownerId');
   };
 
+  async getRoomOwner(roomId: string): Promise<string[]> {
+    return await this.redisClient.hmget(`rooms:${roomId}`, 'ownerId');
+  }
+
   saveRoom(roomId: string, ownerId: string): void {
     this.redisClient.hset(`rooms:${roomId}`, 'ownerId', ownerId);
   };

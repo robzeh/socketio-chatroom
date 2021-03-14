@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SocketService } from '../services/SocketService';
 
-const socket = new SocketService();
+const socket: SocketService = new SocketService();
 
 const SocketContext = React.createContext<SocketService | undefined>(undefined);
 

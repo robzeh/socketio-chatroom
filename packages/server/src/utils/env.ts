@@ -1,6 +1,12 @@
 require('dotenv').config();
 
-let PORT = process.env.PORT;
-let ORIGIN = process.env.ORIGIN;
+const PORT = process.env.PORT;
+const ORIGIN = process.env.ORIGIN;
 
-export { PORT, ORIGIN };
+const REDIS_PORT = process.env.NODE_ENV === 'test'
+  ? process.env.TEST_REDIS_PORT
+  : process.env.REDIS_PORT;
+
+
+
+export { PORT, ORIGIN, REDIS_PORT };

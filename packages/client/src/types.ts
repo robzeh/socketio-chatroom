@@ -16,6 +16,7 @@ interface RoomResponse {
   roomId: string
 };
 
+// TODO: define events?
 interface ClientToServerEvents extends EventsMap {
 };
 

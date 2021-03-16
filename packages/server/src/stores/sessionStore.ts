@@ -11,7 +11,6 @@ class SessionStore {
     this.redisClient = redisClient;
   };
 
-  // is sessionId really a number? i think its suppose to be string
   async findSession(sessionId: string): Promise<Session> {
     const res: string[] = await this.redisClient.hmget(`session:${sessionId}`, 'username', 'roomId');
     return ({

@@ -6,6 +6,7 @@ import { MangaSocket, RoomResponse, Session } from './types';
 import { sessionStore, roomStore, roomUserStore } from './stores/stores';
 import express from 'express';
 import cors from 'cors';
+import * as Socket from './controllers/socket';
 
 const app = express();
 app.use(express.json());
@@ -21,6 +22,7 @@ const io = new Server(httpServer, {
 // socket middleware, check if in sessionStore
 // next type: err?: ExtendedError, idk if to include
 io.use(async (socket: MangaSocket, next: (err?: any) => void) => {
+  console.log(socket.handshake);
   // check if existing sessionId
   const sessionId = socket.handshake.auth.sessionId;
   if (sessionId) {
@@ -28,8 +30,8 @@ io.use(async (socket: MangaSocket, next: (err?: any) => void) => {
     // check if session.username === handshake username???
     if (session) {
       socket.sessionId = sessionId;
-      socket.username = session.username,
-        socket.roomId = session.roomId
+      socket.username = session.username;
+      socket.roomId = session.roomId;
 
       return next();
     }
@@ -43,6 +45,8 @@ io.use(async (socket: MangaSocket, next: (err?: any) => void) => {
 
   next();
 });
+
+const { createRoom, joinRoom, leaveRoom, disconnect } = Socket.default(io);
 
 io.on('connection', async (socket: MangaSocket) => {
   console.log(`${socket.username} connected`);
@@ -65,97 +69,10 @@ io.on('connection', async (socket: MangaSocket) => {
     roomId: socket.roomId
   });
 
-  socket.on('CREATE_ROOM', async (sessionId: string, cb: (res: RoomResponse) => void) => {
-    // create 6 digit room id
-    const roomId: string = Math.floor(100000 + Math.random() * 900000).toString();
-
-    // save to room store with ownerId as sessionId
-    roomStore.saveRoom(roomId, sessionId);
-
-    // update session
-    const session: Session = await sessionStore.findSession(sessionId);
-    sessionStore.saveSession(sessionId, {
-      ...session,
-      roomId: roomId
-    });
-
-    // save to room users store
-    roomUserStore.saveRoomUser(roomId, sessionId);
-
-    // join room 
-    socket.join(roomId);
-
-    // send roomId back to user
-    cb({
-      success: true,
-      roomId: roomId
-    });
-  });
-
-  socket.on('JOIN_ROOM', async (sessionId: string, roomId: string, cb: (res: RoomResponse) => void) => {
-    // check if room exists
-    const room: number = await roomStore.findRoom(roomId);
-    if (room) {
-      // update session
-      const session: Session = await sessionStore.findSession(sessionId);
-      sessionStore.saveSession(sessionId, {
-        ...session,
-        roomId: roomId
-      });
-
-      // save to room users store
-      roomUserStore.saveRoomUser(roomId, sessionId);
-
-      // emit to room that user joined
-
-      cb({
-        success: true,
-        roomId: roomId
-      });
-    } else {
-      cb({
-        success: false,
-        roomId: ''
-      });
-    }
-  });
-
-  socket.on('LEAVE_ROOM', async (sessionId: string, cb: (res: RoomResponse) => void) => {
-    // remove user from room
-    const session: Session = await sessionStore.findSession(sessionId);
-    const roomId: string = session.roomId;
-    socket.leave(roomId);
-
-    // update session
-    sessionStore.saveSession(sessionId, {
-      ...session,
-      roomId: ''
-    });
-
-    // emit to room, username or session id???
-    //io.to(roomId).emit('USER_LEFT', session.username);
-
-    // remove from room user store\
-    roomUserStore.removeRoomUser(roomId, sessionId);
-
-    cb({
-      success: true,
-      roomId: ''
-    });
-  });
-
-  socket.on('disconnect', async () => {
-    console.log(`Bye ${socket.username}`);
-
-    // if user was in room, remove from room and emit to room
-    const session = await sessionStore.findSession(socket.sessionId);
-    // pretty sure session.roomId is either always valid or '' by this point
-    if (session.roomId) {
-      roomUserStore.removeRoomUser(session.roomId, socket.sessionId);
-      // emit to room that user left
-      // io.to(roomid)
-    }
-  });
+  socket.on('CREATE_ROOM', createRoom);
+  socket.on('JOIN_ROOM', joinRoom);
+  socket.on('LEAVE_ROOM', leaveRoom);
+  socket.on('disconnect', disconnect);
 
   // socket.io automatically removes empty rooms, remove from our store too
   io.of('/').adapter.on('delete-room', (room: string) => {

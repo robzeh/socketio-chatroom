@@ -3,9 +3,34 @@ import { roomStore, roomUserStore, sessionStore } from '../stores/stores';
 import { MangaSocket, RoomResponse, Session } from '../types'
 
 export default function (io: Server) {
+  // emit session details to user on login
+  const onLogin = async function () {
+    const socket: MangaSocket = this;
+
+    console.log(`${socket.username} connected`);
+    // check if their last room is still active
+    let roomId = socket.roomId;
+    if (!await roomStore.findRoom(socket.roomId)) {
+      roomId = ''; // room doesnt exist
+    }
+
+    // save session
+    sessionStore.saveSession(socket.sessionId, {
+      username: socket.username,
+      roomId: roomId
+    });
+
+    // emit session details to user
+    socket.emit('SESSION', {
+      username: socket.username,
+      sessionId: socket.sessionId,
+      roomId: socket.roomId
+    });
+
+  };
+
   const createRoom = async function (sessionId: string, cb: (res: RoomResponse) => void) {
-    const socket = this; // hence the 'function' above, as an arrow function will not work
-    // ...
+    const socket: MangaSocket = this; // hence the 'function' above, as an arrow function will not work
 
     const roomId: string = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -33,7 +58,7 @@ export default function (io: Server) {
   };
 
   const joinRoom = async function (sessionId: string, roomId: string, cb: (res: RoomResponse) => void) {
-    const socket = this;
+    const socket: MangaSocket = this;
     // check if room exists
     const room: number = await roomStore.findRoom(roomId);
     if (room) {
@@ -63,7 +88,7 @@ export default function (io: Server) {
   }
 
   const leaveRoom = async function (sessionId: string, cb: (res: RoomResponse) => void) {
-    const socket = this;
+    const socket: MangaSocket = this;
     // remove user from room
     const session: Session = await sessionStore.findSession(sessionId);
     const roomId: string = session.roomId;
@@ -88,7 +113,7 @@ export default function (io: Server) {
   }
 
   const disconnect = async () => {
-    const socket = this;
+    const socket: MangaSocket = this;
     console.log(`Bye ${socket.username}`);
 
     // if user was in room, remove from room and emit to room
@@ -103,9 +128,11 @@ export default function (io: Server) {
   }
 
   return {
+    onLogin,
     createRoom,
     joinRoom,
     leaveRoom,
     disconnect
-  }
-}
+  };
+
+};

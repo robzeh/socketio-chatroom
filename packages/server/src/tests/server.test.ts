@@ -1,148 +1,126 @@
-import { roomUserStore } from '../stores/stores';
+import { redis, roomStore, roomUserStore, sessionStore } from '../stores/stores';
 import * as Socket from '../controllers/socket';
 
 import { createServer } from 'http';
-import { Server } from 'socket.io';
-import { io as Client } from 'socket.io-client';
-import express from 'express';
+import { Server, Socket as ServerSocket } from 'socket.io';
+import { io as Client, Socket as ClientSocket } from 'socket.io-client';
+import { AddressInfo } from 'net';
+import { RoomResponse, Session } from '../types';
 
-describe('test', () => {
+describe('create room', () => {
+  let io: Server, serverSocket: ServerSocket, clientSocket: ClientSocket, clientSocket2: ClientSocket, roomId: string, PORT: number;
 
-  test('will it work?', async (done) => {
-    const app = express();
-    const httpServer = createServer(app);
-    const io = new Server(httpServer);
-
-    const { createRoom, joinRoom, leaveRoom } = Socket.default(io);
-
-    io.on('connection', async (socket) => {
-      console.log(socket)
-
-      socket.on('CREATE_ROOM', createRoom);
-      socket.on('JOIN_ROOM', joinRoom);
-      socket.on('LEAVE_ROOM', leaveRoom);
-    })
-
-    httpServer.listen(4000);
-
-    const clientSocket = Client('http://localhost:4000', {
-      auth: {
-        username: 'robie',
-        sessionId: '000',
-        roomId: ''
-      }
+  beforeAll((done) => {
+    redis.flushall();
+    const httpServer = createServer();
+    io = new Server(httpServer);
+    httpServer.listen(() => {
+      const { port } = httpServer.address() as AddressInfo;
+      PORT = port;
+      clientSocket = Client(`http://localhost:${port}`);
+      io.on('connection', (socket) => {
+        serverSocket = socket;
+      });
+      clientSocket.on('connect', done);
     });
+  });
 
+  afterAll(() => {
     io.close();
     clientSocket.close();
+  });
 
-    done()
+  test('client creates room and server acknowledges', (done) => {
+    const { createRoom } = Socket.default(io);
+    serverSocket.on('CREATE_ROOM', createRoom);
+
+    clientSocket.emit('CREATE_ROOM', '123', (cb: RoomResponse) => {
+      roomId = cb.roomId;
+      expect(cb.success).toBe(true);
+      expect(cb.roomId).toHaveLength(6); // 6 digit room code
+      done();
+    });
+
+  });
+
+  test('redis stores after create room', async () => {
+    // check room store
+    const roomExists: number = await roomStore.findRoom(roomId);
+    const roomOwner: string[] = await roomStore.getRoomOwner(roomId);
+    expect(roomExists).toBe(1);
+    expect(roomOwner).toEqual(['123']);
+
+    // room user store
+    const roomUserExists: number = await roomUserStore.isRoomUser(roomId, '123');
+    expect(roomUserExists).toBe(1);
+
+    // check updated session
+    const updatedSession: Session = await sessionStore.findSession('123');
+    expect(updatedSession.roomId).toBe(roomId);
+
+    // TODO: Clarify this case
+    // expect(serverSocket.rooms).toEqual(new Set([clientSocket.id, roomId]));
+
+  });
+
+  test('another user can connect', (done) => {
+    clientSocket2 = Client(`http://localhost:${PORT}`);
+    clientSocket2.on('connect', done);
+  });
+
+  test('another user can join room', (done) => {
+    const { joinRoom } = Socket.default(io);
+    serverSocket.on('JOIN_ROOM', joinRoom);
+
+
+    clientSocket2.emit('JOIN_ROOM', '789', roomId, (cb: RoomResponse) => {
+      expect(cb.success).toBe(true);
+      expect(cb.roomId).toBe(roomId);
+      done();
+    });
+  });
+
+  test('redis stores after join room', async () => {
+    // user is part of room user store
+    const roomUserExists: number = await roomUserStore.isRoomUser(roomId, '789');
+    expect(roomUserExists).toBe(1);
+
+    // room users
+    const roomUsers: string[] = await roomUserStore.getAllRoomUsers(roomId);
+    expect(roomUsers).toEqual(['123', '789']);
+
+    // TODO: clarify this case
+    // expect(serverSocket.rooms).toEqual(new Set([clientSocket2.id, roomId]));
+
+    // check session
+    const user: Session = await sessionStore.findSession('789');
+    expect(user.roomId).toBe(roomId);
+
+  });
+
+  test('user can leave room', (done) => {
+    const { leaveRoom } = Socket.default(io);
+    serverSocket.on('LEAVE_ROOM', leaveRoom);
+
+    clientSocket2.emit('LEAVE_ROOM', '789', (cb: RoomResponse) => {
+      expect(cb.success).toBe(true);
+      expect(cb.roomId).toBe('');
+      done();
+    });
+
+  });
+
+  test('redis stores after leave room', async () => {
+    const roomUserLeft: number = await roomUserStore.isRoomUser(roomId, '789');
+    expect(roomUserLeft).toBe(0);
+
+    const roomUsers: string[] = await roomUserStore.getAllRoomUsers(roomId);
+    expect(roomUsers).toEqual(['123']);
+
+    // check session
+    const userLeftSession: Session = await sessionStore.findSession('789');
+    expect(userLeftSession.roomId).toBe('');
 
   })
 
-  //test('test', (done) => {
-  //  const httpServer = createServer();
-  //  const io = new Server(httpServer);
-
-  //  const { createRoom, joinRoom } = Socket.default(io)
-  //  //const { createRoom } = require('../controllers/socket')(io);
-  //  //const { joinRoom } = require('../controllers/socket')(io);
-
-  //  const onConnection = (socket) => {
-  //    socket.on('CREATE_ROOM', createRoom);
-  //    socket.on('JOIN_ROOM', joinRoom);
-  //  };
-
-  //  httpServer.listen(() => {
-  //    const port = httpServer.address().port;
-  //    const clientSocket = Client(`http://localhost:${port}`);
-  //    io.on('connection', onConnection);
-
-  //    let id;
-  //    clientSocket.emit('CREATE_ROOM', '123', (res) => {
-  //      id = res.roomId;
-  //      expect(res.roomId).toHaveLength(6);
-  //    })
-
-  //    io.close();
-  //    clientSocket.close();
-
-  //  });
-
-  //  done();
-  //});
-
 });
-
-//describe("my awesome project", () => {
-//  let io, serverSocket, clientSocket;
-//
-//  beforeAll((done) => {
-//    const httpServer = createServer();
-//    io = new Server(httpServer);
-//    httpServer.listen(() => {
-//      const port = httpServer.address().port;
-//      clientSocket = new Client(`http://localhost:${port}`);
-//      io.on("connection", (socket) => {
-//        serverSocket = socket;
-//      });
-//      clientSocket.on("connect", done);
-//    });
-//  });
-//
-//  afterAll(() => {
-//    io.close();
-//    clientSocket.close();
-//  });
-//
-//  test("should work", (done) => {
-//    clientSocket.on("hello", (arg) => {
-//      expect(arg).toBe("world");
-//      done();
-//    });
-//    serverSocket.emit("hello", "world");
-//  });
-//
-//  test("session", (done) => {
-//    clientSocket.on('SESSION', (arg) => {
-//      expect(arg).toStrictEqual({
-//        username: '',
-//        sessionId: '',
-//        roomId: ''
-//      });
-//      done();
-//    });
-//    serverSocket.emit('SESSION', {
-//      username: '',
-//      sessionId: '',
-//      roomId: ''
-//    });
-//  })
-//
-//  test("should work (with ack)", (done) => {
-//    serverSocket.on("hi", (data: string, cb) => {
-//      expect(data).toBe("test");
-//      cb("hola");
-//    });
-//    clientSocket.emit("hi", "test", (arg) => {
-//      expect(arg).toBe("hola");
-//      done();
-//    });
-//  });
-//});
-
-  //  test('create room', (done) => {
-  //    const { createOrder } = require('../controllers/socket')(io);
-  //    serverSocket.on('CREATE_ROOM', (createOrder) => {
-  //      createOrder(213);
-  //    })
-  //
-  //    clientSocket.emit('CREATE_ROOM', (data) => {
-  //      expect(data).toBe({
-  //        success: false,
-  //        roomId: ''
-  //      });
-  //      done();
-  //    });
-  //  });
-  //

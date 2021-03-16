@@ -12,9 +12,13 @@ interface Session {
   roomId: string
 };
 
+interface SessionDetails extends Session {
+  sessionId: string
+};
+
 interface RoomResponse {
   success: boolean,
   roomId: string
 };
 
-export { MangaSocket, Session, RoomResponse };
+export { MangaSocket, Session, SessionDetails, RoomResponse };

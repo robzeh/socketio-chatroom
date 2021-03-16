@@ -27,22 +27,18 @@ const Home = ({ }: HomeProps) => {
 
   // initialize socket
   React.useEffect(() => {
-    socket.init(userDetails);
+    const login = async () => {
+      const user: User = await socket.init(userDetails);
+      console.log(user);
+      setUserDetails({
+        username: user.username,
+        sessionId: user.sessionId,
+        roomId: user.roomId
+      });
+    };
+    login();
     return () => socket.disconnect();
   }, []); // should dep array be socket? or just run on mount
-
-  // get updated userDetails from server, socket.on('SESSION)
-  React.useEffect(() => {
-    if (socket === null) return;
-    const sessionSubscription = socket.onSession().subscribe((res: User) => {
-      setUserDetails({
-        username: res.username,
-        sessionId: res.sessionId,
-        roomId: res.roomId
-      });
-    });
-    return () => sessionSubscription.unsubscribe();
-  }, [socket]);
 
   // try to join last room
   React.useEffect(() => {

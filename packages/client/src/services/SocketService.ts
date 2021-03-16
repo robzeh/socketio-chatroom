@@ -5,7 +5,7 @@ import { RoomResponse, User } from '../types';
 class SocketService {
   #socket: Socket = {} as Socket;
 
-  init(userDetails: User) {
+  init(userDetails: User): Promise<User> {
     this.#socket = io(
       'http://localhost:4000',
       {
@@ -16,14 +16,18 @@ class SocketService {
         },
       },
     );
-    return this;
+    return new Promise((resolve) => {
+      this.#socket.emit('SESSION', (res: User) => {
+        resolve(res);
+      });
+    });
   };
 
   // session details from server on initialize 
-  onSession(): Observable<User> {
-    // @ts-ignore
-    return fromEvent(this.#socket, 'SESSION');
-  };
+  //onSession(): Observable<User> {
+  //  // @ts-ignore
+  //  return fromEvent(this.#socket, 'SESSION');
+  //};
 
   //onLeave(): Observable<string> {
   //  // @ts-ignore

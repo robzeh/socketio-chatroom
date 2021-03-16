@@ -1,10 +1,10 @@
 import { Server, Socket } from 'socket.io';
 import { roomStore, roomUserStore, sessionStore } from '../stores/stores';
-import { MangaSocket, RoomResponse, Session } from '../types'
+import { MangaSocket, RoomResponse, Session, SessionDetails } from '../types'
 
 export default function (io: Server) {
   // emit session details to user on login
-  const onLogin = async function () {
+  const onLogin = async function (cb: (res: SessionDetails) => void) {
     const socket: MangaSocket = this;
 
     console.log(`${socket.username} connected`);
@@ -21,7 +21,7 @@ export default function (io: Server) {
     });
 
     // emit session details to user
-    socket.emit('SESSION', {
+    cb({
       username: socket.username,
       sessionId: socket.sessionId,
       roomId: socket.roomId
@@ -112,7 +112,7 @@ export default function (io: Server) {
     });
   }
 
-  const disconnect = async () => {
+  const disconnect = async function () {
     const socket: MangaSocket = this;
     console.log(`Bye ${socket.username}`);
 

@@ -28,7 +28,7 @@ const { onLogin, createRoom, joinRoom, leaveRoom, disconnect } = Socket.default(
 
 io.on('connection', async (socket: MangaSocket) => {
   // emit session details to user
-  await onLogin();
+  socket.on('SESSION', onLogin);
 
   socket.on('CREATE_ROOM', createRoom);
   socket.on('JOIN_ROOM', joinRoom);
@@ -48,5 +48,3 @@ io.on('connection', async (socket: MangaSocket) => {
 httpServer.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
-
-

@@ -7,7 +7,7 @@ beforeAll((done) => {
 
 // close redis connection
 afterAll(() => {
-  redis.disconnect();
+  redis.quit();
 });
 
 // session store
@@ -109,7 +109,8 @@ describe('room user store', () => {
     roomUserStore.saveRoomUser('123', 'another robie');
 
     const res = await roomUserStore.getAllRoomUsers('123');
-    expect(res).toEqual(['robie', 'another robie']);
+    expect(res).toContain('robie');
+    expect(res).toContain('another robie');
   })
 
   // remove room user

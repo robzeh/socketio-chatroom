@@ -7,7 +7,9 @@ import { io as Client, Socket as ClientSocket } from 'socket.io-client';
 import { AddressInfo } from 'net';
 import { RoomResponse, Session } from '../types';
 
-describe('create room', () => {
+// TODO: Refactor setup to be similar to middleware.test.ts
+
+describe('server socket functions', () => {
   let io: Server, serverSocket: ServerSocket, clientSocket: ClientSocket, clientSocket2: ClientSocket, roomId: string, PORT: number;
 
   beforeAll((done) => {
@@ -28,6 +30,8 @@ describe('create room', () => {
   afterAll(() => {
     io.close();
     clientSocket.close();
+    clientSocket2.close();
+    redis.quit();
   });
 
   test('client creates room and server acknowledges', (done) => {

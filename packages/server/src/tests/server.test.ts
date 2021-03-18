@@ -5,7 +5,8 @@ import { createServer } from 'http';
 import { Server, Socket as ServerSocket } from 'socket.io';
 import { io as Client, Socket as ClientSocket } from 'socket.io-client';
 import { AddressInfo } from 'net';
-import { RoomResponse, Session } from '../types';
+import { MangaSocket, RoomResponse, Session } from '../types';
+import { socketMiddleware } from '../controllers/socketMiddleware';
 
 // TODO: Refactor setup to be similar to middleware.test.ts
 

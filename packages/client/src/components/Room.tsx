@@ -3,6 +3,7 @@ import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
 import { RoomResponse, UserContextType } from '../types';
+import { Chat } from './Chat';
 
 type RoomProps = {
   roomId: string,
@@ -31,6 +32,7 @@ const Room = ({ roomId, leaveRoom }: RoomProps) => {
     <div>
       <h1>hello {userDetails.username}, you are in room {roomId}</h1>
       <button onClick={leave}>Leave Room</button>
+      <Chat roomId={roomId} />
     </div>
   );
 

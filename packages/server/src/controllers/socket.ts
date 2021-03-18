@@ -112,6 +112,30 @@ export default function (io: Server) {
     });
   }
 
+  const newRoom = async function (roomId: string, cb: (res: string[]) => void) {
+    const socket: MangaSocket = this;
+    // get room users
+    const roomUsers: string[] = await roomUserStore.getAllRoomUsers(roomId);
+
+    let roomUsersUsernames: string[] = [];
+    // do i want to send usernames or user object?
+    // loop through room users and get their session info
+
+    // promise.all?
+
+    roomUsers.forEach(async (sessId: string) => {
+      const session: Session = await sessionStore.findSession(sessId);
+      console.log(session);
+      roomUsersUsernames.push(session.username);
+      console.log(roomUsersUsernames);
+    });
+
+    // add own user to list? pretty sure join room handles this already
+
+    // TODO: CALLBACK WONT WAIT FOR FOREACH... 
+    cb(roomUsersUsernames);
+  }
+
   const disconnect = async function () {
     const socket: MangaSocket = this;
     console.log(`Bye ${socket.username}`);
@@ -132,6 +156,7 @@ export default function (io: Server) {
     createRoom,
     joinRoom,
     leaveRoom,
+    newRoom,
     disconnect
   };
 

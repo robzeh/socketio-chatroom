@@ -80,6 +80,15 @@ class SocketService {
     });
   };
 
+  // get existing room users on join
+  newRoom(roomId: string): Promise<string[]> {
+    return new Promise((resolve) => {
+      this.#socket.emit('NEW_ROOM', roomId, (res: string[]) => {
+        resolve(res);
+      });
+    });
+  }
+
   disconnect(): void {
     console.log('Disconnecting socket');
     this.#socket.disconnect();

@@ -117,23 +117,20 @@ export default function (io: Server) {
     // get room users
     const roomUsers: string[] = await roomUserStore.getAllRoomUsers(roomId);
 
-    let roomUsersUsernames: string[] = [];
     // do i want to send usernames or user object?
     // loop through room users and get their session info
 
-    // promise.all?
+    const getRoomUsers: () => Promise<string[]> = async () => {
+      let roomUsersUsernames: string[] = [];
+      for (const sessId of roomUsers) {
+        const session: Session = await sessionStore.findSession(sessId);
+        roomUsersUsernames.push(session.username);
+      }
+      return roomUsersUsernames;
+    };
 
-    roomUsers.forEach(async (sessId: string) => {
-      const session: Session = await sessionStore.findSession(sessId);
-      console.log(session);
-      roomUsersUsernames.push(session.username);
-      console.log(roomUsersUsernames);
-    });
-
-    // add own user to list? pretty sure join room handles this already
-
-    // TODO: CALLBACK WONT WAIT FOR FOREACH... 
-    cb(roomUsersUsernames);
+    const allRoomUsers: string[] = await getRoomUsers();
+    cb(allRoomUsers);
   }
 
   const disconnect = async function () {

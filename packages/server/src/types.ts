@@ -3,13 +3,17 @@ import { Socket } from 'socket.io';
 interface MangaSocket extends Socket {
   sessionId?: string,
   username?: string,
-  roomId?: string
+  roomId?: string,
+  userId?: string,
+  color?: string
 };
 
 // include sessionId?
 interface Session {
   username: string,
-  roomId: string
+  roomId: string,
+  userId: string,
+  color: string
 };
 
 interface SessionDetails extends Session {
@@ -23,6 +27,7 @@ interface RoomResponse {
 
 interface RoomUser {
   username: string,
+  userId: string,
   color: string
 };
 

@@ -17,14 +17,18 @@ export default function (io: Server) {
     // save session
     sessionStore.saveSession(socket.sessionId, {
       username: socket.username,
-      roomId: roomId
+      roomId: roomId,
+      userId: socket.userId,
+      color: socket.color
     });
 
     // emit session details to user
     cb({
       username: socket.username,
       sessionId: socket.sessionId,
-      roomId: socket.roomId
+      roomId: socket.roomId,
+      userId: socket.userId,
+      color: socket.color
     });
 
   };
@@ -78,7 +82,8 @@ export default function (io: Server) {
       console.log(session.username);
       io.to(roomId).emit('USER_JOIN', {
         username: session.username,
-        color: '', // session.color
+        userId: session.userId,
+        color: session.color
       });
 
       cb({
@@ -109,7 +114,8 @@ export default function (io: Server) {
     // emit to room, username or session id???
     io.to(roomId).emit('USER_LEFT', {
       username: session.username,
-      color: '' // session.color
+      userId: session.userId,
+      color: session.color
     });
 
     // remove from room user store\
@@ -135,7 +141,8 @@ export default function (io: Server) {
         const session: Session = await sessionStore.findSession(sessId);
         const user: RoomUser = {
           username: session.username,
-          color: '' // session.color
+          userId: session.userId,
+          color: session.color
         }
         roomUsersUsernames.push(user);
       }
@@ -164,7 +171,8 @@ export default function (io: Server) {
         // emit to room that user left
         io.to(session.roomId).emit('USER_LEFT', {
           username: session.username,
-          color: '' // session.color
+          userId: session.userId,
+          color: session.color
         });
       }
     }

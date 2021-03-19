@@ -20,6 +20,7 @@ const ChatFooter = ({ roomId }: ChatFooterProps) => {
       username: userDetails.username,
       message: message,
       roomId: roomId,
+      userId: userDetails.userId,
       color: '' // TODO
     };
 

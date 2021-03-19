@@ -14,10 +14,11 @@ const Messages = ({ roomId }: MessagesProps) => {
 
   // message subscription
   React.useEffect(() => {
-    const messageSubscription = socket.onMessage().subscribe(({ username, message, color }) => {
+    const messageSubscription = socket.onMessage().subscribe(({ username, message, userId, color }) => {
       const newMessage: ChatMessage = {
         username: username,
         message: message,
+        userId: userId,
         color: color
       };
       setMessages((prevMessages) => [...prevMessages, newMessage]);

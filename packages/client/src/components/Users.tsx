@@ -27,16 +27,17 @@ const Users = ({ roomId }: UsersProps) => {
 
   // user join and leave subscriptions
   React.useEffect(() => {
-    const userJoinSubscription = socket.onJoin().subscribe(({ username, color }: RoomUser) => {
+    const userJoinSubscription = socket.onJoin().subscribe(({ username, userId, color }: RoomUser) => {
       const newUser = {
         username: username,
+        userId: userId,
         color: color
       }
       setUsers((prevUsers) => [...prevUsers, newUser]);
     })
 
-    const userLeaveSubscription = socket.onLeave().subscribe(({ username }: RoomUser) => {
-      setUsers((prevUsers) => prevUsers.filter((user) => user.username !== username));
+    const userLeaveSubscription = socket.onLeave().subscribe(({ userId }: RoomUser) => {
+      setUsers((prevUsers) => prevUsers.filter((user) => user.userId !== userId));
     });
 
     return () => {

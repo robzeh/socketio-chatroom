@@ -3,7 +3,9 @@ import { DefaultEventsMap, EventsMap } from 'socket.io-client/build/typed-events
 interface User {
   username: string,
   sessionId: string,
-  roomId: string
+  roomId: string,
+  userId: string,
+  color: string
 };
 
 interface UserContextType {
@@ -24,6 +26,7 @@ interface UserJoinResponse {
 // user id? 4 digits from session id
 interface RoomUser {
   username: string,
+  userId: string,
   color: string
 };
 

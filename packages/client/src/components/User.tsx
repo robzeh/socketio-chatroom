@@ -8,7 +8,7 @@ type UserProps = {
 const User = ({ details }: UserProps) => {
 
   return (
-    <p>{details.username}: {details.color}</p>
+    <p>{details.username} #{details.userId}: {details.color}</p>
   );
 
 };

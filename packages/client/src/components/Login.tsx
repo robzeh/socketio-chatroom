@@ -23,6 +23,8 @@ const Login = () => {
         username: usernameRef.current.value,
         sessionId: userDetails.sessionId,
         roomId: userDetails.roomId,
+        userId: userDetails.userId,
+        color: userDetails.color
       });
       history.push('/home');
     };

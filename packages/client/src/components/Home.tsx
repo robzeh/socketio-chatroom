@@ -33,7 +33,9 @@ const Home = ({ }: HomeProps) => {
       setUserDetails({
         username: user.username,
         sessionId: user.sessionId,
-        roomId: user.roomId
+        roomId: user.roomId,
+        userId: user.userId,
+        color: user.color
       });
     };
     login();

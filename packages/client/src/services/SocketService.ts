@@ -13,6 +13,8 @@ class SocketService {
           username: userDetails.username,
           sessionId: userDetails.sessionId,
           roomId: userDetails.roomId,
+          userId: userDetails.userId,
+          color: userDetails.color
         },
       },
     );

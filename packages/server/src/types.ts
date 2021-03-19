@@ -21,4 +21,17 @@ interface RoomResponse {
   roomId: string
 };
 
-export { MangaSocket, Session, SessionDetails, RoomResponse };
+interface ChatMessage {
+  username: string,
+  message: string,
+  roomId: string,
+  color: string
+};
+
+export {
+  MangaSocket,
+  Session,
+  SessionDetails,
+  RoomResponse,
+  ChatMessage
+};

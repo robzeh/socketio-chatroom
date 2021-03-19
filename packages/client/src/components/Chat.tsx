@@ -3,6 +3,8 @@ import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
 import { UserContextType } from '../types';
+import { ChatFooter } from './ChatFooter';
+import { Messages } from './Messages';
 import { Users } from './Users';
 
 type ChatProps = {
@@ -23,6 +25,8 @@ const Chat = ({ roomId }: ChatProps) => {
       <h1>Hello {userDetails.username}</h1>
       <p>You are in room: {roomId}</p>
       <Users roomId={roomId} />
+      <Messages roomId={roomId} />
+      <ChatFooter roomId={roomId} />
     </div>
   );
 

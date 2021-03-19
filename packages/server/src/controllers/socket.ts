@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { roomStore, roomUserStore, sessionStore } from '../stores/stores';
-import { MangaSocket, RoomResponse, Session, SessionDetails } from '../types'
+import { ChatMessage, MangaSocket, RoomResponse, Session, SessionDetails } from '../types'
 
 export default function (io: Server) {
   // emit session details to user on login
@@ -138,7 +138,11 @@ export default function (io: Server) {
 
     const allRoomUsers: string[] = await getRoomUsers();
     cb(allRoomUsers);
-  }
+  };
+
+  const message = async function ({ username, message, roomId, color }: ChatMessage) {
+    io.in(roomId).emit('MESSAGE', ({ username, message, color }));
+  };
 
   const disconnect = async function () {
     const socket: MangaSocket = this;
@@ -166,6 +170,7 @@ export default function (io: Server) {
     joinRoom,
     leaveRoom,
     newRoom,
+    message,
     disconnect
   };
 

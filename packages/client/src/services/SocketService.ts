@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { from, fromEvent, Observable } from 'rxjs';
-import { RoomResponse, User, UserJoinResponse } from '../types';
+import { ChatMessage, ChatMessageRequest, RoomResponse, User, UserJoinResponse } from '../types';
 
 class SocketService {
   #socket: Socket = {} as Socket;
@@ -87,6 +87,15 @@ class SocketService {
         resolve(res);
       });
     });
+  };
+
+  sendMessage(message: ChatMessageRequest): void {
+    this.#socket.emit('MESSAGE', message);
+  };
+
+  onMessage(): Observable<ChatMessage> {
+    // @ts-ignore
+    return fromEvent(this.#socket, 'MESSAGE');
   };
 
   onJoin(): Observable<UserJoinResponse> {

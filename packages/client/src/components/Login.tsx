@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
+import styled from 'styled-components';
 import { useUser } from '../contexts/UserProvider';
 import { UserContextType } from '../types';
 
@@ -32,19 +33,64 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name</label>
-          <input type='text' name='username' ref={usernameRef} />
-        </div>
-        <div>
-          <button type='submit'>Join</button>
-        </div>
-      </form>
-    </div>
+    <Container>
+      <Form onSubmit={handleSubmit}>
+        <Label>Name</Label>
+        <Div>
+          <Input type='text' name='username' ref={usernameRef} placeholder='Enter a username...' autoComplete='off' />
+        </Div>
+        <Div>
+          <Button type='submit'>Join</Button>
+        </Div>
+      </Form>
+    </Container>
   );
 
 };
 
 export { Login };
+
+const Label = styled.label`
+  font-size: 14px;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Form = styled.form`
+  position: fixed;
+  width: 100%;
+  max-width: 320px;
+  min-height: 95vh;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Div = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: 15px;
+  line-height: 26px;
+  cursor: text;
+  margin-top: 4px;
+  margin-bottom: 8px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  display: block;
+  font-size: inherit;
+  line-height: inherit;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  align-items: center;
+  height: 30px;
+`;

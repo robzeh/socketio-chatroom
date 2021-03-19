@@ -16,6 +16,11 @@ interface RoomResponse {
   roomId: string
 };
 
+interface UserJoinResponse {
+  username: string,
+  // color?
+}
+
 // TODO: define events?
 interface ClientToServerEvents extends EventsMap {
 };
@@ -23,4 +28,4 @@ interface ClientToServerEvents extends EventsMap {
 interface ServerToClientEvents {
 }
 
-export type { User, UserContextType, RoomResponse, ClientToServerEvents, ServerToClientEvents };
+export type { User, UserContextType, RoomResponse, ClientToServerEvents, ServerToClientEvents, UserJoinResponse };

@@ -25,6 +25,21 @@ const Users = ({ roomId }: UsersProps) => {
   }, []);
 
   // user join and leave subscriptions
+  React.useEffect(() => {
+    const userJoinSubscription = socket.onJoin().subscribe(({ username }) => {
+      console.log(username);
+      setUsers((prevUsers) => [...prevUsers, username]);
+    })
+
+    const userLeaveSubscription = socket.onLeave().subscribe(({ username }) => {
+      setUsers((prevUsers) => prevUsers.filter((user) => user !== username));
+    });
+
+    return () => {
+      userJoinSubscription.unsubscribe();
+      userLeaveSubscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <>

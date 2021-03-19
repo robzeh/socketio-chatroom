@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
-import { fromEvent, Observable } from 'rxjs';
-import { RoomResponse, User } from '../types';
+import { from, fromEvent, Observable } from 'rxjs';
+import { RoomResponse, User, UserJoinResponse } from '../types';
 
 class SocketService {
   #socket: Socket = {} as Socket;
@@ -87,7 +87,17 @@ class SocketService {
         resolve(res);
       });
     });
-  }
+  };
+
+  onJoin(): Observable<UserJoinResponse> {
+    // @ts-ignore
+    return fromEvent(this.#socket, 'USER_JOIN');
+  };
+
+  onLeave(): Observable<UserJoinResponse> {
+    // @ts-ignore    
+    return fromEvent(this.#socket, 'USER_LEFT');
+  };
 
   disconnect(): void {
     console.log('Disconnecting socket');

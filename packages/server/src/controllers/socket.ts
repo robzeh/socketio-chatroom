@@ -72,8 +72,13 @@ export default function (io: Server) {
       // save to room users store
       roomUserStore.saveRoomUser(roomId, sessionId);
 
-      // emit to room that user joined
       socket.join(roomId);
+
+      // emit to room that user joined
+      console.log(session.username);
+      io.to(roomId).emit('USER_JOIN', {
+        username: session.username
+      });
 
       cb({
         success: true,
@@ -101,7 +106,9 @@ export default function (io: Server) {
     });
 
     // emit to room, username or session id???
-    //io.to(roomId).emit('USER_LEFT', session.username);
+    io.to(roomId).emit('USER_LEFT', {
+      username: session.username
+    });
 
     // remove from room user store\
     roomUserStore.removeRoomUser(roomId, sessionId);
@@ -141,12 +148,17 @@ export default function (io: Server) {
     const session = await sessionStore.findSession(socket.sessionId);
     // pretty sure session.roomId is either always valid or '' by this point
     if (session.roomId) {
-      roomUserStore.removeRoomUser(session.roomId, socket.sessionId);
-      // emit to room that user left
-      // io.to(roomid)
+      const room: number = await roomStore.findRoom(session.roomId);
+      if (room) {
+        roomUserStore.removeRoomUser(session.roomId, socket.sessionId);
+        // emit to room that user left
+        io.to(session.roomId).emit('USER_LEFT', {
+          username: session.username
+        });
+      }
     }
 
-  }
+  };
 
   return {
     onLogin,

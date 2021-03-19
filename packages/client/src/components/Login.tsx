@@ -40,7 +40,7 @@ const Login = () => {
           <Input type='text' name='username' ref={usernameRef} placeholder='Enter a username...' autoComplete='off' />
         </Div>
         <Div>
-          <Button type='submit'>Join</Button>
+          <Button type='submit'>Login</Button>
         </Div>
       </Form>
     </Container>
@@ -52,6 +52,7 @@ export { Login };
 
 const Label = styled.label`
   font-size: 14px;
+  margin-bottom: 2px;
 `;
 
 const Container = styled.div`
@@ -64,6 +65,7 @@ const Form = styled.form`
   position: fixed;
   width: 100%;
   max-width: 320px;
+  min-width: 200px;
   min-height: 95vh;
   justify-content: center;
   display: flex;

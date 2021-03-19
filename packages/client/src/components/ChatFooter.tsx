@@ -13,7 +13,7 @@ const ChatFooter = ({ roomId }: ChatFooterProps) => {
   const { userDetails }: UserContextType = useUser();
   const socket: SocketService = useSocket();
 
-  const sendMessage = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const messageDetails: ChatMessageRequest = {
@@ -30,8 +30,10 @@ const ChatFooter = ({ roomId }: ChatFooterProps) => {
 
   return (
     <>
-      <input value={message} type='text' onChange={(e) => setMessage(e.target.value)} placeholder='Send a message...' />
-      <button onClick={sendMessage}>Send</button>
+      <form onSubmit={sendMessage}>
+        <input value={message} type='text' onChange={(e) => setMessage(e.target.value)} placeholder='Send a message...' />
+        <button type='submit'>Send</button>
+      </form>
     </>
   );
 

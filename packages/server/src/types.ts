@@ -21,11 +21,14 @@ interface RoomResponse {
   roomId: string
 };
 
-interface ChatMessage {
+interface RoomUser {
   username: string,
-  message: string,
-  roomId: string,
   color: string
+};
+
+interface ChatMessage extends RoomUser {
+  message: string,
+  roomId: string
 };
 
 export {
@@ -33,5 +36,6 @@ export {
   Session,
   SessionDetails,
   RoomResponse,
+  RoomUser,
   ChatMessage
 };

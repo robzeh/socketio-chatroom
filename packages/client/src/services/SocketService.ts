@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { from, fromEvent, Observable } from 'rxjs';
-import { ChatMessage, ChatMessageRequest, RoomResponse, User, UserJoinResponse } from '../types';
+import { ChatMessage, ChatMessageRequest, RoomResponse, RoomUser, User, UserJoinResponse } from '../types';
 
 class SocketService {
   #socket: Socket = {} as Socket;
@@ -81,9 +81,9 @@ class SocketService {
   };
 
   // get existing room users on join
-  newRoom(roomId: string): Promise<string[]> {
+  newRoom(roomId: string): Promise<RoomUser[]> {
     return new Promise((resolve) => {
-      this.#socket.emit('NEW_ROOM', roomId, (res: string[]) => {
+      this.#socket.emit('NEW_ROOM', roomId, (res: RoomUser[]) => {
         resolve(res);
       });
     });
@@ -98,12 +98,12 @@ class SocketService {
     return fromEvent(this.#socket, 'MESSAGE');
   };
 
-  onJoin(): Observable<UserJoinResponse> {
+  onJoin(): Observable<RoomUser> {
     // @ts-ignore
     return fromEvent(this.#socket, 'USER_JOIN');
   };
 
-  onLeave(): Observable<UserJoinResponse> {
+  onLeave(): Observable<RoomUser> {
     // @ts-ignore    
     return fromEvent(this.#socket, 'USER_LEFT');
   };

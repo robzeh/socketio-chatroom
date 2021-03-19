@@ -21,10 +21,14 @@ interface UserJoinResponse {
   // color?
 };
 
-interface ChatMessage {
+// user id? 4 digits from session id
+interface RoomUser {
   username: string,
-  message: string,
   color: string
+};
+
+interface ChatMessage extends RoomUser {
+  message: string,
 };
 
 interface ChatMessageRequest extends ChatMessage {
@@ -45,6 +49,7 @@ export type {
   ClientToServerEvents,
   ServerToClientEvents,
   UserJoinResponse,
+  RoomUser,
   ChatMessage,
   ChatMessageRequest
 };

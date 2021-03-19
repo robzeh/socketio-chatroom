@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { roomStore, roomUserStore, sessionStore } from '../stores/stores';
-import { ChatMessage, MangaSocket, RoomResponse, Session, SessionDetails } from '../types'
+import { ChatMessage, MangaSocket, RoomResponse, RoomUser, Session, SessionDetails } from '../types'
 
 export default function (io: Server) {
   // emit session details to user on login
@@ -77,7 +77,8 @@ export default function (io: Server) {
       // emit to room that user joined
       console.log(session.username);
       io.to(roomId).emit('USER_JOIN', {
-        username: session.username
+        username: session.username,
+        color: '', // session.color
       });
 
       cb({
@@ -107,7 +108,8 @@ export default function (io: Server) {
 
     // emit to room, username or session id???
     io.to(roomId).emit('USER_LEFT', {
-      username: session.username
+      username: session.username,
+      color: '' // session.color
     });
 
     // remove from room user store\
@@ -119,24 +121,28 @@ export default function (io: Server) {
     });
   }
 
-  const newRoom = async function (roomId: string, cb: (res: string[]) => void) {
+  const newRoom = async function (roomId: string, cb: (res: RoomUser[]) => void) {
     const socket: MangaSocket = this;
-    // get room users
+    // get room users usernames
     const roomUsers: string[] = await roomUserStore.getAllRoomUsers(roomId);
 
     // do i want to send usernames or user object?
     // loop through room users and get their session info
 
-    const getRoomUsers: () => Promise<string[]> = async () => {
-      let roomUsersUsernames: string[] = [];
+    const getRoomUsers: () => Promise<RoomUser[]> = async () => {
+      let roomUsersUsernames: RoomUser[] = [];
       for (const sessId of roomUsers) {
         const session: Session = await sessionStore.findSession(sessId);
-        roomUsersUsernames.push(session.username);
+        const user: RoomUser = {
+          username: session.username,
+          color: '' // session.color
+        }
+        roomUsersUsernames.push(user);
       }
       return roomUsersUsernames;
     };
 
-    const allRoomUsers: string[] = await getRoomUsers();
+    const allRoomUsers: RoomUser[] = await getRoomUsers();
     cb(allRoomUsers);
   };
 
@@ -157,7 +163,8 @@ export default function (io: Server) {
         roomUserStore.removeRoomUser(session.roomId, socket.sessionId);
         // emit to room that user left
         io.to(session.roomId).emit('USER_LEFT', {
-          username: session.username
+          username: session.username,
+          color: '' // session.color
         });
       }
     }

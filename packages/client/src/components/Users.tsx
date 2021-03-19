@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
-import { UserContextType } from '../types';
+import { RoomUser, UserContextType } from '../types';
+import { User } from './User';
 
 type UsersProps = {
   roomId: string
@@ -10,14 +11,14 @@ type UsersProps = {
 
 const Users = ({ roomId }: UsersProps) => {
   // type array of User?
-  const [users, setUsers] = React.useState<string[]>([]);
+  const [users, setUsers] = React.useState<RoomUser[]>([]);
   const { userDetails }: UserContextType = useUser();
   const socket: SocketService = useSocket();
 
   // on room join, get existing users
   React.useEffect(() => {
     const getExistingUsers = async () => {
-      const existingUsers: string[] = await socket.newRoom(roomId);
+      const existingUsers: RoomUser[] = await socket.newRoom(roomId);
       console.log(existingUsers);
       setUsers(existingUsers);
     };
@@ -26,13 +27,16 @@ const Users = ({ roomId }: UsersProps) => {
 
   // user join and leave subscriptions
   React.useEffect(() => {
-    const userJoinSubscription = socket.onJoin().subscribe(({ username }) => {
-      console.log(username);
-      setUsers((prevUsers) => [...prevUsers, username]);
+    const userJoinSubscription = socket.onJoin().subscribe(({ username, color }: RoomUser) => {
+      const newUser = {
+        username: username,
+        color: color
+      }
+      setUsers((prevUsers) => [...prevUsers, newUser]);
     })
 
-    const userLeaveSubscription = socket.onLeave().subscribe(({ username }) => {
-      setUsers((prevUsers) => prevUsers.filter((user) => user !== username));
+    const userLeaveSubscription = socket.onLeave().subscribe(({ username }: RoomUser) => {
+      setUsers((prevUsers) => prevUsers.filter((user) => user.username !== username));
     });
 
     return () => {
@@ -44,8 +48,8 @@ const Users = ({ roomId }: UsersProps) => {
   return (
     <>
       <h2>Users</h2>
-      {users.map((user) => (
-        <p>{user}</p>
+      {users.map((user: RoomUser) => (
+        <User details={user} />
       ))}
     </>
   );

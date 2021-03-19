@@ -10,7 +10,7 @@ const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref:
 
   return (
     <Container>
-      <FormContainer>
+      <CardContainer>
         <Card>
           <Form onSubmit={handleCreate}>
             <Button type='submit'>Create Room</Button>
@@ -22,7 +22,7 @@ const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref:
             <Button type='submit'>Join Room</Button>
           </Form>
         </Card>
-      </FormContainer>
+      </CardContainer>
     </Container>
   );
 
@@ -52,7 +52,7 @@ const Card = styled.div`
   justify-content: center;
 `;
 
-const FormContainer = styled.div`
+const CardContainer = styled.div`
   width: 100%;
   max-width: 320px;
   min-width: 200px;

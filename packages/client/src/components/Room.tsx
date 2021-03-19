@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
@@ -29,13 +30,17 @@ const Room = ({ roomId, leaveRoom }: RoomProps) => {
   };
 
   return (
-    <div>
-      <h1>hello {userDetails.username}, you are in room {roomId}</h1>
+    <Container>
       <button onClick={leave}>Leave Room</button>
       <Chat roomId={roomId} />
-    </div>
+    </Container>
   );
 
 };
 
 export { Room };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+`;

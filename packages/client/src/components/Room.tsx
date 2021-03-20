@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
-import { RoomResponse, UserContextType } from '../types';
+import { RoomResponse, UserContextType } from '../models/types';
 import { Chat } from './Chat';
 
 type RoomProps = {

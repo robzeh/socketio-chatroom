@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
-import { ChatMessageRequest, UserContextType } from '../types';
+import { ChatMessageRequest, UserContextType } from '../models/types';
 
 type ChatFooterProps = {
   roomId: string

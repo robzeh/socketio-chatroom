@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
-import { RoomUser, UserContextType } from '../types';
+import { RoomUser, UserContextType } from '../models/types';
 import { User } from './User';
 
 type UsersProps = {

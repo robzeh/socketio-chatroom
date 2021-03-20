@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
-import { UserContextType } from '../types';
+import { UserContextType } from '../models/types';
 import { ChatFooter } from './ChatFooter';
 import { Messages } from './Messages';
 import { Users } from './Users';

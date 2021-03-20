@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { from, fromEvent, Observable } from 'rxjs';
-import { ChatMessage, ChatMessageRequest, RoomResponse, RoomUser, User, UserJoinResponse } from '../types';
+import { ChatMessage, ChatMessageRequest, RoomResponse, RoomUser, User, UserJoinResponse } from '../models/types';
 
 class SocketService {
   #socket: Socket = {} as Socket;

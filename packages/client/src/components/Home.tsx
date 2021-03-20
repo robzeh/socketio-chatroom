@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
-import { RoomResponse, User, UserContextType } from '../types';
+import { RoomResponse, User, UserContextType } from '../models/types';
 import { Choose } from './Choose';
 import { Room } from './Room';
 

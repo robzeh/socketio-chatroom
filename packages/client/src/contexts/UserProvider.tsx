@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { INITIAL_USER_DETAILS } from '../constants';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { User, UserContextType } from '../types';
+import { User, UserContextType } from '../models/types';
 
 const UserContext = React.createContext<UserContextType | undefined>(undefined);
 

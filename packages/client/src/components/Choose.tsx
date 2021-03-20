@@ -7,21 +7,38 @@ type ChooseProps = {
 };
 
 const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref: React.Ref<HTMLInputElement>) => {
+  const [roomList, setRoomList] = React.useState<boolean>(false);
 
   return (
     <Container>
       <CardContainer>
-        <Card>
-          <Form onSubmit={handleCreate}>
-            <Button type='submit'>Create Room</Button>
-          </Form>
-        </Card>
-        <Card>
-          <Form onSubmit={handleJoin}>
-            <Input type='text' ref={ref} placeholder='Room Code' />
-            <Button type='submit'>Join Room</Button>
-          </Form>
-        </Card>
+        {roomList ? (
+          <>
+            <Card>
+              <p>Rooms</p>
+              <button onClick={() => setRoomList(!roomList)}>Go back</button>
+            </Card>
+          </>
+        ) : (
+          <>
+            <Card>
+              <Form onSubmit={handleCreate}>
+                <Button type='submit'>Create Room</Button>
+              </Form>
+            </Card>
+            <Card>
+              <Form onSubmit={handleJoin}>
+                <Input type='text' ref={ref} placeholder='Room Code' />
+                <Button type='submit'>Join Room</Button>
+              </Form>
+            </Card>
+            <Card>
+              <Form onSubmit={() => setRoomList(!roomList)}>
+                <Button type='submit'>Find a room</Button>
+              </Form>
+            </Card>
+          </>
+        )}
       </CardContainer>
     </Container>
   );

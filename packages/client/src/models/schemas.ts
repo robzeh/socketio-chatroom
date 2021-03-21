@@ -11,5 +11,16 @@ const loginValidation = {
   },
 };
 
+const roomNameValidation = {
+  required: 'Roomname must be provided',
+  maxLength: {
+    value: 20,
+    message: 'Roomname must be less than 20 characters'
+  },
+  pattern: {
+    value: /^[\w\-\.\s]+$/,
+    message: 'Roomname must only contain alphanumeric characters, spaces, underscores, dashes or periods'
+  },
+};
 
-export { loginValidation };
+export { loginValidation, roomNameValidation };

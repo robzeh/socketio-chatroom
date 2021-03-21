@@ -3,6 +3,7 @@ import { RoomFormData } from '../models/types';
 import { ToggleButton } from './ToggleButton';
 import { useForm } from 'react-hook-form';
 import { useToggle } from '../hooks/useToggle';
+import { roomNameValidation } from '../models/schemas';
 // (event: React.FormEvent<HTMLFormElement>) => void
 
 type RoomFormProps = {
@@ -27,10 +28,11 @@ const RoomForm = React.forwardRef(({ toggleForm, handleCreate }: RoomFormProps, 
     <>
       <button onClick={toggleForm} >Cancel create</button>
       <form onSubmit={onSubmit}>
-        <input type='text' name='roomName' ref={register} placeholder='Room Name' autoComplete='off' />
-        <button onClick={handleClick}>toggle private</button>
+        <input type='text' name='roomName' ref={register(roomNameValidation)} placeholder='Room Name' autoComplete='off' />
+        <button type='button' onClick={handleClick}>toggle private</button>
         {privateRoom ? <p>private</p> : <p>public</p>}
         <button type='submit'>Create room</button>
+        {errors.roomName && <div>{errors.roomName.message}</div>}
       </form>
     </>
   );

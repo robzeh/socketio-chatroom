@@ -83,7 +83,7 @@ export default function (io: Server) {
       roomUserStore.saveRoomUser(roomId, sessionId);
 
       // try public room
-      publicRoomStore.addUser(roomId);
+      await publicRoomStore.addUser(roomId);
 
       socket.join(roomId);
 
@@ -129,7 +129,7 @@ export default function (io: Server) {
 
     // remove from room user store\
     roomUserStore.removeRoomUser(roomId, sessionId);
-    publicRoomStore.removeUser(roomId);
+    await publicRoomStore.removeUser(roomId);
 
     cb({
       success: true,
@@ -184,6 +184,7 @@ export default function (io: Server) {
       const room: number = await roomStore.findRoom(session.roomId);
       if (room) {
         roomUserStore.removeRoomUser(session.roomId, socket.sessionId);
+        await publicRoomStore.removeUser(session.roomId);
         // emit to room that user left
         io.to(session.roomId).emit('USER_LEFT', {
           username: session.username,

@@ -14,12 +14,16 @@ class PublicRoomStore {
   };
 
   // update room, try during save room user
-  addUser(roomId: string) {
-    this.redisClient.zincrby('publicRooms', 1, roomId);
+  async addUser(roomId: string) {
+    if (await this.redisClient.zscore('publicRooms', roomId) !== null) {
+      this.redisClient.zincrby('publicRooms', 1, roomId);
+    }
   };
 
-  removeUser(roomId: string) {
-    this.redisClient.zincrby('publicRooms', -1, roomId);
+  async removeUser(roomId: string) {
+    if (await this.redisClient.zscore('publicRooms', roomId) !== null) {
+      this.redisClient.zincrby('publicRooms', -1, roomId);
+    }
   }
 
   removeRoom(roomId: string) {

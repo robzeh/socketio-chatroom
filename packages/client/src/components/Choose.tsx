@@ -1,29 +1,37 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useToggle } from '../hooks/useToggle';
+import { RoomFormData } from '../models/types';
+import { RoomForm } from './RoomForm';
+import { RoomList } from './RoomList';
 
 type ChooseProps = {
-  handleCreate: (event: React.FormEvent<HTMLFormElement>) => void,
+  handleCreate: ({ roomName, privateRoom }: RoomFormData) => Promise<void>,
   handleJoin: (event: React.FormEvent<HTMLFormElement>) => void
 };
 
 const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref: React.Ref<HTMLInputElement>) => {
-  const [roomList, setRoomList] = React.useState<boolean>(false);
+  //const [roomList, setRoomList] = React.useState<boolean>(false);
+  //const [roomForm, setRoomForm] = React.useState<boolean>(false);
+  const [roomForm, setRoomForm] = useToggle(false);
+  const [roomList, setRoomList] = useToggle(false);
+
+  /**
+   * case 1 - create room form
+   * case 2 - room list view
+   * default - 3 cards 
+   */
 
   return (
     <Container>
       <CardContainer>
-        {roomList ? (
+        {roomForm && <RoomForm toggleForm={setRoomForm} handleCreate={handleCreate} />}
+        {roomList && <RoomList toggleList={setRoomList} />}
+        {!roomList && !roomForm && (
           <>
             <Card>
-              <p>Rooms</p>
-              <button onClick={() => setRoomList(!roomList)}>Go back</button>
-            </Card>
-          </>
-        ) : (
-          <>
-            <Card>
-              <Form onSubmit={handleCreate}>
-                <Button type='submit'>Create Room</Button>
+              <Form>
+                <Button onClick={setRoomForm}>Create Room</Button>
               </Form>
             </Card>
             <Card>
@@ -33,8 +41,8 @@ const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref:
               </Form>
             </Card>
             <Card>
-              <Form onSubmit={() => setRoomList(!roomList)}>
-                <Button type='submit'>Find a room</Button>
+              <Form>
+                <Button onClick={setRoomList}>Find a room</Button>
               </Form>
             </Card>
           </>
@@ -91,3 +99,31 @@ const Button = styled.button`
 const Input = styled.input`
   width: 100%;
 `;
+//
+//        {roomList ? (
+//          <>
+//            <Card>
+//              <p>Rooms</p>
+//              <button onClick={() => setRoomList(!roomList)}>Go back</button>
+//            </Card>
+//          </>
+//        ) : (
+//          <>
+//            <Card>
+//              <Form onSubmit={handleCreate}>
+//                <Button type='submit'>Create Room</Button>
+//              </Form>
+//            </Card>
+//            <Card>
+//              <Form onSubmit={handleJoin}>
+//                <Input type='text' ref={ref} placeholder='Room Code' />
+//                <Button type='submit'>Join Room</Button>
+//              </Form>
+//            </Card>
+//            <Card>
+//              <Form onSubmit={() => setRoomList(!roomList)}>
+//                <Button type='submit'>Find a room</Button>
+//              </Form>
+//            </Card>
+//          </>
+//        )}

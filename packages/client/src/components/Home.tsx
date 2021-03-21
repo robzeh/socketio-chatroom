@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
-import { RoomResponse, User, UserContextType } from '../models/types';
+import { RoomFormData, RoomResponse, User, UserContextType } from '../models/types';
 import { Choose } from './Choose';
 import { Room } from './Room';
 
@@ -57,8 +57,9 @@ const Home = ({ }: HomeProps) => {
     }
   }, []);
 
-  const createRoom = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const createRoom = async ({ roomName, privateRoom }: RoomFormData) => {
+    console.log(roomName);
+    console.log(privateRoom);
 
     // create room and set room id
     console.log(userDetails.sessionId);

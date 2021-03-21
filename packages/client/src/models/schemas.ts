@@ -39,4 +39,12 @@ const roomCodeValidation = {
   }
 };
 
-export { loginValidation, roomNameValidation, roomCodeValidation };
+const messageValidation = {
+  required: true,
+  maxLength: {
+    value: 100,
+    message: 'Message must be less than 100 characters'
+  }
+};
+
+export { loginValidation, roomNameValidation, roomCodeValidation, messageValidation };

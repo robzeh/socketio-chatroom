@@ -79,7 +79,9 @@ describe('socket middleware', () => {
       // emulate returning user
       sessionStore.saveSession('123', {
         username: 'robie',
-        roomId: ''
+        roomId: '',
+        userId: '1234',
+        color: ''
       });
       const httpServer = createServer();
       io = new Server(httpServer);
@@ -141,11 +143,13 @@ describe('socket middleware', () => {
       // emulate returning users session data
       sessionStore.saveSession('123', {
         username: 'robie',
-        roomId: 'room'
+        roomId: 'room',
+        userId: '1234',
+        color: ''
       });
 
       // also save to room store, or else onLogin will think the room doesnt exist
-      roomStore.saveRoom('room', '123');
+      roomStore.saveRoom('room', '123', 'robies room', false);
 
       const httpServer = createServer();
       io = new Server(httpServer);

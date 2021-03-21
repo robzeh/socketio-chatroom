@@ -76,22 +76,18 @@ const Home = ({ }: HomeProps) => {
     }
   };
 
-  const joinRoom = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const joinRoom = async (roomId: string) => {
     // attempt to join room and set roomid if valid
-    if (roomRef.current !== null) {
-      const res: RoomResponse = await socket.joinRoom(userDetails.sessionId, roomRef.current.value);
-      if (res.success) {
-        setUserDetails({
-          ...userDetails,
-          roomId: res.roomId
-        });
-        setRoomId(res.roomId);
-      } else {
-        // dialog?
-        console.log(`${roomRef.current.value} is not a valid room`);
-      }
+    const res: RoomResponse = await socket.joinRoom(userDetails.sessionId, roomId);
+    if (res.success) {
+      setUserDetails({
+        ...userDetails,
+        roomId: res.roomId
+      });
+      setRoomId(res.roomId);
+    } else {
+      // dialog?
+      console.log(`${roomId} is not a valid room`);
     }
   };
 

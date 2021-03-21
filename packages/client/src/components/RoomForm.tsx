@@ -15,8 +15,8 @@ const RoomForm = React.forwardRef(({ toggleForm, handleCreate }: RoomFormProps, 
   const { register, handleSubmit, errors } = useForm<RoomFormData>();
   const [privateRoom, setPrivateRoom] = useToggle(false);
 
-  const onSubmit = handleSubmit(({ roomName }) => {
-    handleCreate({ roomName, privateRoom });
+  const onSubmit = handleSubmit(async ({ roomName }) => {
+    await handleCreate({ roomName, privateRoom });
   })
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {

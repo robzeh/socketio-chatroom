@@ -23,4 +23,20 @@ const roomNameValidation = {
   },
 };
 
-export { loginValidation, roomNameValidation };
+const roomCodeValidation = {
+  required: 'Room code must be provided',
+  maxLength: {
+    value: 6,
+    message: 'Room codes are 6 digits long'
+  },
+  minLength: {
+    value: 6,
+    message: 'Room codes are 6 digits long'
+  },
+  pattern: {
+    value: /^\d+$/,
+    message: 'Room codes only contain numbers'
+  }
+};
+
+export { loginValidation, roomNameValidation, roomCodeValidation };

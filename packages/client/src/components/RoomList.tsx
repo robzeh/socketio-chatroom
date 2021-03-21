@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useSocket } from '../contexts/SocketProvider';
 import { RoomListItem } from '../models/types';
 import { SocketService } from '../services/SocketService';
+import { RoomItem } from './RoomListItems';
 
 type RoomListProps = {
   toggleList: (event: React.FormEvent<HTMLButtonElement>) => void,
@@ -26,11 +27,11 @@ const RoomList = ({ toggleList }: RoomListProps) => {
   return (
     <>
       <button onClick={toggleList}>Go back</button>
-      {
-        rooms.map((room: any) => (
-          <p>{room.roomName} hosted by {room.owner} - {room.users}</p>
-        ))
-      }
+      <div>
+        {rooms.map((room) => (
+          <RoomItem roomName={room.roomName} owner={room.owner} users={room.users} />
+        ))}
+      </div>
     </>
   );
 };

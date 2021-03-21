@@ -1,20 +1,25 @@
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useToggle } from '../hooks/useToggle';
+import { roomCodeValidation } from '../models/schemas';
 import { RoomFormData } from '../models/types';
 import { RoomForm } from './RoomForm';
 import { RoomList } from './RoomList';
 
 type ChooseProps = {
   handleCreate: ({ roomName, privateRoom }: RoomFormData) => Promise<void>,
-  handleJoin: (event: React.FormEvent<HTMLFormElement>) => void
+  handleJoin: (roomId: string) => Promise<void>
 };
 
 const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref: React.Ref<HTMLInputElement>) => {
-  //const [roomList, setRoomList] = React.useState<boolean>(false);
-  //const [roomForm, setRoomForm] = React.useState<boolean>(false);
+  const { register, handleSubmit, errors } = useForm<{ roomId: string }>();
   const [roomForm, setRoomForm] = useToggle(false);
   const [roomList, setRoomList] = useToggle(false);
+
+  const onSubmit = handleSubmit(async ({ roomId }) => {
+    await handleJoin(roomId);
+  });
 
   /**
    * case 1 - create room form
@@ -35,9 +40,10 @@ const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref:
               </Form>
             </Card>
             <Card>
-              <Form onSubmit={handleJoin}>
-                <Input type='text' ref={ref} placeholder='Room Code' />
+              <Form onSubmit={onSubmit}>
+                <Input type='text' name='roomId' ref={register(roomCodeValidation)} placeholder='Room Code' autoComplete='off' />
                 <Button type='submit'>Join Room</Button>
+                {errors.roomId && <div>{errors.roomId.message}</div>}
               </Form>
             </Card>
             <Card>

@@ -9,24 +9,28 @@ class PublicRoomStore {
   };
 
   // only called on create room? hardcode 1 here?
-  saveRoom(roomId: string) {
+  saveRoom(roomId: string): void {
     this.redisClient.zadd('publicRooms', 'nx', '1', roomId);
   };
 
   // update room, try during save room user
-  async addUser(roomId: string) {
+  async addUser(roomId: string): Promise<void> {
     if (await this.redisClient.zscore('publicRooms', roomId) !== null) {
       this.redisClient.zincrby('publicRooms', 1, roomId);
     }
   };
 
-  async removeUser(roomId: string) {
+  async removeUser(roomId: string): Promise<void> {
     if (await this.redisClient.zscore('publicRooms', roomId) !== null) {
       this.redisClient.zincrby('publicRooms', -1, roomId);
     }
-  }
+  };
 
-  removeRoom(roomId: string) {
+  async getRooms(start: number, end: number): Promise<string[]> {
+    return await this.redisClient.zrevrange('publicRooms', start, end, "WITHSCORES");
+  };
+
+  removeRoom(roomId: string): void {
     this.redisClient.zrem('publicRooms', roomId);
   };
 

@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { from, fromEvent, Observable } from 'rxjs';
-import { ChatMessage, ChatMessageRequest, RoomResponse, RoomUser, User, UserJoinResponse } from '../models/types';
+import { ChatMessage, ChatMessageRequest, RoomListItem, RoomResponse, RoomUser, User, UserJoinResponse } from '../models/types';
 
 class SocketService {
   #socket: Socket = {} as Socket;
@@ -24,17 +24,6 @@ class SocketService {
       });
     });
   };
-
-  // session details from server on initialize 
-  //onSession(): Observable<User> {
-  //  // @ts-ignore
-  //  return fromEvent(this.#socket, 'SESSION');
-  //};
-
-  //onLeave(): Observable<string> {
-  //  // @ts-ignore
-  //  return fromEvent(this.#socket, 'USER_LEFT');
-  //}
 
   createRoom(sessionId: string, roomName: string, privateRoom: boolean): Promise<RoomResponse> {
     return new Promise((resolve) => {
@@ -95,6 +84,14 @@ class SocketService {
   newRoomName(roomId: string): Promise<string> {
     return new Promise((resolve) => {
       this.#socket.emit('NEW_ROOM_NAME', roomId, (res: string) => {
+        resolve(res);
+      });
+    });
+  };
+
+  getRooms(start: number, end: number): Promise<RoomListItem[]> {
+    return new Promise((resolve) => {
+      this.#socket.emit('GET_ROOMS', start, end, (res: RoomListItem[]) => {
         resolve(res);
       });
     });

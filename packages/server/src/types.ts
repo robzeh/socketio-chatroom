@@ -31,6 +31,12 @@ interface RoomUser {
   color: string
 };
 
+interface RoomListItem {
+  roomName: string,
+  owner: string,
+  users: string
+};
+
 interface ChatMessage extends RoomUser {
   message: string,
   roomId: string
@@ -42,5 +48,6 @@ export {
   SessionDetails,
   RoomResponse,
   RoomUser,
-  ChatMessage
+  ChatMessage,
+  RoomListItem
 };

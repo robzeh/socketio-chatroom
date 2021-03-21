@@ -37,7 +37,11 @@ class SessionStore {
       )
       .expire(`session:${sessionId}`, SESSION_TTL)
       .exec();
-  }
+  };
+
+  async getOwner(sessionId: string): Promise<string[]> {
+    return await this.redisClient.hmget(`session:${sessionId}`, 'username');
+  };
 
 };
 

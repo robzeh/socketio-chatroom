@@ -24,6 +24,10 @@ class RoomStore {
     return await this.redisClient.hmget(`rooms:${roomId}`, 'roomName');
   };
 
+  async getRoomInfo(roomId: string): Promise<string[]> {
+    return await this.redisClient.hmget(`rooms:${roomId}`, 'roomName', 'ownerId');
+  }
+
   removeRoom(roomId: string): void {
     this.redisClient.del(`rooms:${roomId}`);
   };

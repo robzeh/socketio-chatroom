@@ -47,6 +47,12 @@ interface RoomFormData {
   privateRoom: boolean
 };
 
+interface RoomListItem {
+  roomName: string,
+  owner: string,
+  users: string
+};
+
 // TODO: define events?
 interface ClientToServerEvents extends EventsMap {
 };
@@ -65,5 +71,6 @@ export type {
   ChatMessage,
   ChatMessageRequest,
   LoginFormData,
-  RoomFormData
+  RoomFormData,
+  RoomListItem
 };

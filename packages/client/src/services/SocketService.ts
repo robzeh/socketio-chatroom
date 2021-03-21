@@ -36,9 +36,9 @@ class SocketService {
   //  return fromEvent(this.#socket, 'USER_LEFT');
   //}
 
-  createRoom(sessionId: string): Promise<RoomResponse> {
+  createRoom(sessionId: string, roomName: string, privateRoom: boolean): Promise<RoomResponse> {
     return new Promise((resolve) => {
-      this.#socket.emit('CREATE_ROOM', sessionId, (res: RoomResponse) => {
+      this.#socket.emit('CREATE_ROOM', sessionId, roomName, privateRoom, (res: RoomResponse) => {
         if (res.success) {
           resolve({
             success: true,
@@ -86,6 +86,15 @@ class SocketService {
   newRoom(roomId: string): Promise<RoomUser[]> {
     return new Promise((resolve) => {
       this.#socket.emit('NEW_ROOM', roomId, (res: RoomUser[]) => {
+        resolve(res);
+      });
+    });
+  };
+
+  // refactor to observable? so users can change naem
+  newRoomName(roomId: string): Promise<string> {
+    return new Promise((resolve) => {
+      this.#socket.emit('NEW_ROOM_NAME', roomId, (res: string) => {
         resolve(res);
       });
     });

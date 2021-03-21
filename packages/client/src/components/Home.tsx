@@ -63,12 +63,15 @@ const Home = ({ }: HomeProps) => {
 
     // create room and set room id
     console.log(userDetails.sessionId);
-    const res: RoomResponse = await socket.createRoom(userDetails.sessionId);
+    const res: RoomResponse = await socket.createRoom(userDetails.sessionId, roomName, privateRoom);
+    console.log(res);
     if (res.success) {
       setUserDetails({
         ...userDetails,
         roomId: res.roomId
       });
+      console.log('setroom')
+      console.log(res.roomId)
       setRoomId(res.roomId);
     }
   };

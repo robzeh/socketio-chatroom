@@ -33,13 +33,13 @@ export default function (io: Server) {
 
   };
 
-  const createRoom = async function (sessionId: string, cb: (res: RoomResponse) => void) {
+  const createRoom = async function (sessionId: string, roomName: string, privateRoom: boolean, cb: (res: RoomResponse) => void) {
     const socket: MangaSocket = this; // hence the 'function' above, as an arrow function will not work
-
     const roomId: string = Math.floor(100000 + Math.random() * 900000).toString();
 
+    // roomname privatroom 
     // save to room store with ownerId as sessionId
-    roomStore.saveRoom(roomId, sessionId);
+    roomStore.saveRoom(roomId, sessionId, roomName, privateRoom);
 
     // update session
     const session: Session = await sessionStore.findSession(sessionId);
@@ -127,6 +127,7 @@ export default function (io: Server) {
     });
   }
 
+  // rename newRoomUsers?
   const newRoom = async function (roomId: string, cb: (res: RoomUser[]) => void) {
     const socket: MangaSocket = this;
     // get room users usernames
@@ -151,6 +152,11 @@ export default function (io: Server) {
 
     const allRoomUsers: RoomUser[] = await getRoomUsers();
     cb(allRoomUsers);
+  };
+
+  const newRoomName = async function (roomId: string, cb: (res: string) => void) {
+    const roomName: string[] = await roomStore.getRoomName(roomId);
+    cb(roomName[0]);
   };
 
   const message = async function ({ username, message, roomId, color }: ChatMessage) {
@@ -185,6 +191,7 @@ export default function (io: Server) {
     joinRoom,
     leaveRoom,
     newRoom,
+    newRoomName,
     message,
     disconnect
   };

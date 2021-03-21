@@ -3,7 +3,7 @@ import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { PORT, ORIGIN } from './utils/env';
 import { MangaSocket, RoomResponse, Session } from './types';
-import { sessionStore, roomStore, roomUserStore } from './stores/stores';
+import { sessionStore, roomStore, roomUserStore, publicRoomStore } from './stores/stores';
 import express from 'express';
 import cors from 'cors';
 import * as Socket from './controllers/socket';
@@ -44,6 +44,7 @@ io.on('connection', async (socket: MangaSocket) => {
     roomStore.removeRoom(room);
     // remove room from room users store
     roomUserStore.removeRoom(room);
+    publicRoomStore.removeRoom(room);
   });
 
 });

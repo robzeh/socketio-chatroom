@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { roomStore, roomUserStore, sessionStore } from '../stores/stores';
+import { roomStore, roomUserStore, sessionStore, publicRoomStore } from '../stores/stores';
 import { ChatMessage, MangaSocket, RoomResponse, RoomUser, Session, SessionDetails } from '../types'
 
 export default function (io: Server) {
@@ -41,6 +41,12 @@ export default function (io: Server) {
     // save to room store with ownerId as sessionId
     roomStore.saveRoom(roomId, sessionId, roomName, privateRoom);
 
+    console.log(!privateRoom);
+    // if public room add to public room store
+    if (!privateRoom) {
+      publicRoomStore.saveRoom(roomId);
+    }
+
     // update session
     const session: Session = await sessionStore.findSession(sessionId);
     sessionStore.saveSession(sessionId, {
@@ -75,6 +81,9 @@ export default function (io: Server) {
 
       // save to room users store
       roomUserStore.saveRoomUser(roomId, sessionId);
+
+      // try public room
+      publicRoomStore.addUser(roomId);
 
       socket.join(roomId);
 
@@ -120,6 +129,7 @@ export default function (io: Server) {
 
     // remove from room user store\
     roomUserStore.removeRoomUser(roomId, sessionId);
+    publicRoomStore.removeUser(roomId);
 
     cb({
       success: true,

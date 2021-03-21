@@ -176,13 +176,14 @@ export default function (io: Server) {
     // getRooms returns [i=roomId, i+1=users]
     for (let i = 0; i < rooms.length; i += 2) {
       // room name, ownerid
-      const room: string[] = await roomStore.getRoomInfo(rooms[0])
+      const room: string[] = await roomStore.getRoomInfo(rooms[i])
       // [ownerName]
-      const ownerName: string[] = await sessionStore.getOwner(room[1]);
+      const ownerName: string[] = await sessionStore.getOwner(room[i + 1]);
       const roomItem: RoomListItem = {
         roomName: room[0],
         owner: ownerName[0],
-        users: rooms[i + 1]
+        users: rooms[i + 1],
+        roomId: rooms[i]
       };
       roomItems.push(roomItem);
     };

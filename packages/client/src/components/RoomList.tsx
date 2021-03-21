@@ -2,13 +2,14 @@ import * as React from 'react';
 import { useSocket } from '../contexts/SocketProvider';
 import { RoomListItem } from '../models/types';
 import { SocketService } from '../services/SocketService';
-import { RoomItem } from './RoomListItems';
+import { RoomLItem } from './RoomLItem';
 
 type RoomListProps = {
   toggleList: (event: React.FormEvent<HTMLButtonElement>) => void,
+  handleJoin: (roomId: string) => Promise<void>
 };
 
-const RoomList = ({ toggleList }: RoomListProps) => {
+const RoomList = ({ toggleList, handleJoin }: RoomListProps) => {
   // room item type? 
   const [rooms, setRooms] = React.useState<RoomListItem[]>([]);
   const socket: SocketService = useSocket();
@@ -29,7 +30,7 @@ const RoomList = ({ toggleList }: RoomListProps) => {
       <button onClick={toggleList}>Go back</button>
       <div>
         {rooms.map((room) => (
-          <RoomItem roomName={room.roomName} owner={room.owner} users={room.users} />
+          <RoomLItem roomName={room.roomName} owner={room.owner} users={room.users} roomId={room.roomId} handleJoin={handleJoin} />
         ))}
       </div>
     </>

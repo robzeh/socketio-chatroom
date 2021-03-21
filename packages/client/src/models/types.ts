@@ -50,7 +50,8 @@ interface RoomFormData {
 interface RoomListItem {
   roomName: string,
   owner: string,
-  users: string
+  users: string,
+  roomId: string
 };
 
 // TODO: define events?

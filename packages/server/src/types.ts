@@ -34,7 +34,8 @@ interface RoomUser {
 interface RoomListItem {
   roomName: string,
   owner: string,
-  users: string
+  users: string,
+  roomId: string
 };
 
 interface ChatMessage extends RoomUser {

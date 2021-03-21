@@ -31,7 +31,7 @@ const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref:
     <Container>
       <CardContainer>
         {roomForm && <RoomForm toggleForm={setRoomForm} handleCreate={handleCreate} />}
-        {roomList && <RoomList toggleList={setRoomList} />}
+        {roomList && <RoomList toggleList={setRoomList} handleJoin={handleJoin} />}
         {!roomList && !roomForm && (
           <>
             <Card>

@@ -25,7 +25,7 @@ const ChatFooter = ({ roomId }: ChatFooterProps) => {
     };
 
     socket.sendMessage(messageDetails);
-    e?.target.reset();
+    e?.target.reset(); // or reset() api?
   });
 
   return (

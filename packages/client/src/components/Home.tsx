@@ -16,7 +16,6 @@ const Home = ({ }: HomeProps) => {
   const socket: SocketService = useSocket();
   const history = useHistory();
   const [roomId, setRoomId] = React.useState<string>('');
-  const roomRef = React.useRef<HTMLInputElement | null>(null);
 
   // if no username, push back to login
   React.useEffect(() => {
@@ -96,7 +95,7 @@ const Home = ({ }: HomeProps) => {
       {roomId ? (
         <Room roomId={roomId} leaveRoom={id => setRoomId(id)} />
       ) : (
-        <Choose handleCreate={createRoom} handleJoin={joinRoom} ref={roomRef} />
+        <Choose handleCreate={createRoom} handleJoin={joinRoom} />
       )}
     </>
   );

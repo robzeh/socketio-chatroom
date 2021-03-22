@@ -12,7 +12,7 @@ type ChooseProps = {
   handleJoin: (roomId: string) => Promise<void>
 };
 
-const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref: React.Ref<HTMLInputElement>) => {
+const Choose = ({ handleCreate, handleJoin }: ChooseProps) => {
   const { register, handleSubmit, errors } = useForm<{ roomId: string }>();
   const [roomForm, setRoomForm] = useToggle(false);
   const [roomList, setRoomList] = useToggle(false);
@@ -57,7 +57,7 @@ const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref:
     </Container>
   );
 
-});
+};
 
 export { Choose };
 

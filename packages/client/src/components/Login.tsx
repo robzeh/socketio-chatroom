@@ -2,11 +2,14 @@ import * as React from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { useUser } from '../contexts/UserProvider';
-import { UserContextType } from '../types';
+import { LoginFormData, UserContextType } from '../models/types';
+import { useForm } from 'react-hook-form';
+import { loginValidation } from '../models/schemas';
+
 
 const Login = () => {
-  const usernameRef = React.useRef<HTMLInputElement | null>(null);
   const { userDetails, setUserDetails }: UserContextType = useUser();
+  const { register, handleSubmit, errors } = useForm<LoginFormData>();
   const history = useHistory();
 
   // check if they had a username
@@ -16,28 +19,21 @@ const Login = () => {
     }
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (usernameRef.current !== null) {
-      setUserDetails({
-        username: usernameRef.current.value,
-        sessionId: userDetails.sessionId,
-        roomId: userDetails.roomId,
-        userId: userDetails.userId,
-        color: userDetails.color
-      });
-      history.push('/home');
-    };
-
-  };
+  const onSubmit = handleSubmit(async ({ username }: LoginFormData) => {
+    setUserDetails({
+      ...userDetails,
+      username: username
+    });
+    history.push('/home');
+  });
 
   return (
     <Container>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={onSubmit}>
         <Label>Name</Label>
         <Div>
-          <Input type='text' name='username' ref={usernameRef} placeholder='Enter a username...' autoComplete='off' />
+          <Input type='text' name='username' ref={register(loginValidation)} placeholder='Enter a username...' autoComplete='off' />
+          {errors.username && <div>{errors.username.message}</div>}
         </Div>
         <Div>
           <Button type='submit'>Login</Button>
@@ -74,7 +70,6 @@ const Form = styled.form`
 `;
 
 const Div = styled.div`
-  display: flex;
   align-items: center;
   width: 100%;
   font-size: 15px;

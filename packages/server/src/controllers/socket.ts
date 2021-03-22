@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
-import { roomStore, roomUserStore, sessionStore } from '../stores/stores';
-import { ChatMessage, MangaSocket, RoomResponse, RoomUser, Session, SessionDetails } from '../types'
+import { roomStore, roomUserStore, sessionStore, publicRoomStore } from '../stores/stores';
+import { ChatMessage, MangaSocket, RoomListItem, RoomResponse, RoomUser, Session, SessionDetails } from '../types'
 
 export default function (io: Server) {
   // emit session details to user on login
@@ -33,13 +33,19 @@ export default function (io: Server) {
 
   };
 
-  const createRoom = async function (sessionId: string, cb: (res: RoomResponse) => void) {
+  const createRoom = async function (sessionId: string, roomName: string, privateRoom: boolean, cb: (res: RoomResponse) => void) {
     const socket: MangaSocket = this; // hence the 'function' above, as an arrow function will not work
-
     const roomId: string = Math.floor(100000 + Math.random() * 900000).toString();
 
+    // roomname privatroom 
     // save to room store with ownerId as sessionId
-    roomStore.saveRoom(roomId, sessionId);
+    roomStore.saveRoom(roomId, sessionId, roomName, privateRoom);
+
+    console.log(!privateRoom);
+    // if public room add to public room store
+    if (!privateRoom) {
+      publicRoomStore.saveRoom(roomId);
+    }
 
     // update session
     const session: Session = await sessionStore.findSession(sessionId);
@@ -75,6 +81,9 @@ export default function (io: Server) {
 
       // save to room users store
       roomUserStore.saveRoomUser(roomId, sessionId);
+
+      // try public room
+      await publicRoomStore.addUser(roomId);
 
       socket.join(roomId);
 
@@ -120,6 +129,7 @@ export default function (io: Server) {
 
     // remove from room user store\
     roomUserStore.removeRoomUser(roomId, sessionId);
+    await publicRoomStore.removeUser(roomId);
 
     cb({
       success: true,
@@ -127,6 +137,7 @@ export default function (io: Server) {
     });
   }
 
+  // rename newRoomUsers?
   const newRoom = async function (roomId: string, cb: (res: RoomUser[]) => void) {
     const socket: MangaSocket = this;
     // get room users usernames
@@ -153,6 +164,33 @@ export default function (io: Server) {
     cb(allRoomUsers);
   };
 
+  const newRoomName = async function (roomId: string, cb: (res: string) => void) {
+    const roomName: string[] = await roomStore.getRoomName(roomId);
+    cb(roomName[0]);
+  };
+
+  const getRooms = async function (start: number, end: number, cb: (res: RoomListItem[]) => void) {
+    const rooms: string[] = await publicRoomStore.getRooms(start, end);
+
+    let roomItems: RoomListItem[] = [];
+    // getRooms returns [i=roomId, i+1=users]
+    for (let i = 0; i < rooms.length; i += 2) {
+      // room name, ownerid
+      const room: string[] = await roomStore.getRoomInfo(rooms[i])
+      // [ownerName]
+      const ownerName: string[] = await sessionStore.getOwner(room[i + 1]);
+      const roomItem: RoomListItem = {
+        roomName: room[0],
+        owner: ownerName[0],
+        users: rooms[i + 1],
+        roomId: rooms[i]
+      };
+      roomItems.push(roomItem);
+    };
+
+    cb(roomItems);
+  };
+
   const message = async function ({ username, message, roomId, color }: ChatMessage) {
     io.in(roomId).emit('MESSAGE', ({ username, message, color }));
   };
@@ -168,6 +206,7 @@ export default function (io: Server) {
       const room: number = await roomStore.findRoom(session.roomId);
       if (room) {
         roomUserStore.removeRoomUser(session.roomId, socket.sessionId);
+        await publicRoomStore.removeUser(session.roomId);
         // emit to room that user left
         io.to(session.roomId).emit('USER_LEFT', {
           username: session.username,
@@ -185,6 +224,8 @@ export default function (io: Server) {
     joinRoom,
     leaveRoom,
     newRoom,
+    newRoomName,
+    getRooms,
     message,
     disconnect
   };

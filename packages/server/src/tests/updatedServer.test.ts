@@ -92,7 +92,9 @@ describe('updated server socket', () => {
       // i did this bc idk if serversocket.sessionid will be different based on the different clients
       sessionStore.saveSession('123', {
         username: 'another robie',
-        roomId: ''
+        roomId: '',
+        userId: '1234',
+        color: ''
       });
 
       clientSocket2 = Client(

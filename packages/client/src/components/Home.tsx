@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
-import { RoomResponse, User, UserContextType } from '../types';
+import { RoomFormData, RoomResponse, User, UserContextType } from '../models/types';
 import { Choose } from './Choose';
 import { Room } from './Room';
 
@@ -16,7 +16,6 @@ const Home = ({ }: HomeProps) => {
   const socket: SocketService = useSocket();
   const history = useHistory();
   const [roomId, setRoomId] = React.useState<string>('');
-  const roomRef = React.useRef<HTMLInputElement | null>(null);
 
   // if no username, push back to login
   React.useEffect(() => {
@@ -57,37 +56,37 @@ const Home = ({ }: HomeProps) => {
     }
   }, []);
 
-  const createRoom = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const createRoom = async ({ roomName, privateRoom }: RoomFormData) => {
+    console.log(roomName);
+    console.log(privateRoom);
 
     // create room and set room id
     console.log(userDetails.sessionId);
-    const res: RoomResponse = await socket.createRoom(userDetails.sessionId);
+    const res: RoomResponse = await socket.createRoom(userDetails.sessionId, roomName, privateRoom);
+    console.log(res);
+    if (res.success) {
+      setUserDetails({
+        ...userDetails,
+        roomId: res.roomId
+      });
+      console.log('setroom')
+      console.log(res.roomId)
+      setRoomId(res.roomId);
+    }
+  };
+
+  const joinRoom = async (roomId: string) => {
+    // attempt to join room and set roomid if valid
+    const res: RoomResponse = await socket.joinRoom(userDetails.sessionId, roomId);
     if (res.success) {
       setUserDetails({
         ...userDetails,
         roomId: res.roomId
       });
       setRoomId(res.roomId);
-    }
-  };
-
-  const joinRoom = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // attempt to join room and set roomid if valid
-    if (roomRef.current !== null) {
-      const res: RoomResponse = await socket.joinRoom(userDetails.sessionId, roomRef.current.value);
-      if (res.success) {
-        setUserDetails({
-          ...userDetails,
-          roomId: res.roomId
-        });
-        setRoomId(res.roomId);
-      } else {
-        // dialog?
-        console.log(`${roomRef.current.value} is not a valid room`);
-      }
+    } else {
+      // dialog?
+      console.log(`${roomId} is not a valid room`);
     }
   };
 
@@ -96,7 +95,7 @@ const Home = ({ }: HomeProps) => {
       {roomId ? (
         <Room roomId={roomId} leaveRoom={id => setRoomId(id)} />
       ) : (
-        <Choose handleCreate={createRoom} handleJoin={joinRoom} ref={roomRef} />
+        <Choose handleCreate={createRoom} handleJoin={joinRoom} />
       )}
     </>
   );

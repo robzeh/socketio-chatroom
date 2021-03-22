@@ -1,32 +1,63 @@
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
+import { useToggle } from '../hooks/useToggle';
+import { roomCodeValidation } from '../models/schemas';
+import { RoomFormData } from '../models/types';
+import { RoomForm } from './RoomForm';
+import { RoomList } from './RoomList';
 
 type ChooseProps = {
-  handleCreate: (event: React.FormEvent<HTMLFormElement>) => void,
-  handleJoin: (event: React.FormEvent<HTMLFormElement>) => void
+  handleCreate: ({ roomName, privateRoom }: RoomFormData) => Promise<void>,
+  handleJoin: (roomId: string) => Promise<void>
 };
 
-const Choose = React.forwardRef(({ handleCreate, handleJoin }: ChooseProps, ref: React.Ref<HTMLInputElement>) => {
+const Choose = ({ handleCreate, handleJoin }: ChooseProps) => {
+  const { register, handleSubmit, errors } = useForm<{ roomId: string }>();
+  const [roomForm, setRoomForm] = useToggle(false);
+  const [roomList, setRoomList] = useToggle(false);
+
+  const onSubmit = handleSubmit(async ({ roomId }) => {
+    await handleJoin(roomId);
+  });
+
+  /**
+   * case 1 - create room form
+   * case 2 - room list view
+   * default - 3 cards 
+   */
 
   return (
     <Container>
       <CardContainer>
-        <Card>
-          <Form onSubmit={handleCreate}>
-            <Button type='submit'>Create Room</Button>
-          </Form>
-        </Card>
-        <Card>
-          <Form onSubmit={handleJoin}>
-            <Input type='text' ref={ref} placeholder='Room Code' />
-            <Button type='submit'>Join Room</Button>
-          </Form>
-        </Card>
+        {roomForm && <RoomForm toggleForm={setRoomForm} handleCreate={handleCreate} />}
+        {roomList && <RoomList toggleList={setRoomList} handleJoin={handleJoin} />}
+        {!roomList && !roomForm && (
+          <>
+            <Card>
+              <Form>
+                <Button onClick={setRoomForm}>Create Room</Button>
+              </Form>
+            </Card>
+            <Card>
+              <Form onSubmit={onSubmit}>
+                <Input type='text' name='roomId' ref={register(roomCodeValidation)} placeholder='Room Code' autoComplete='off' />
+                <Button type='submit'>Join Room</Button>
+                {errors.roomId && <div>{errors.roomId.message}</div>}
+              </Form>
+            </Card>
+            <Card>
+              <Form>
+                <Button onClick={setRoomList}>Find a room</Button>
+              </Form>
+            </Card>
+          </>
+        )}
       </CardContainer>
     </Container>
   );
 
-});
+};
 
 export { Choose };
 
@@ -74,3 +105,31 @@ const Button = styled.button`
 const Input = styled.input`
   width: 100%;
 `;
+//
+//        {roomList ? (
+//          <>
+//            <Card>
+//              <p>Rooms</p>
+//              <button onClick={() => setRoomList(!roomList)}>Go back</button>
+//            </Card>
+//          </>
+//        ) : (
+//          <>
+//            <Card>
+//              <Form onSubmit={handleCreate}>
+//                <Button type='submit'>Create Room</Button>
+//              </Form>
+//            </Card>
+//            <Card>
+//              <Form onSubmit={handleJoin}>
+//                <Input type='text' ref={ref} placeholder='Room Code' />
+//                <Button type='submit'>Join Room</Button>
+//              </Form>
+//            </Card>
+//            <Card>
+//              <Form onSubmit={() => setRoomList(!roomList)}>
+//                <Button type='submit'>Find a room</Button>
+//              </Form>
+//            </Card>
+//          </>
+//        )}

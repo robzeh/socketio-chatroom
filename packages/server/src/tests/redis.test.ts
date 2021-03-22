@@ -17,13 +17,17 @@ describe('session store', () => {
   test('save session', async () => {
     sessionStore.saveSession('1234', {
       username: 'robie',
-      roomId: 'room'
+      roomId: 'room',
+      userId: '1234',
+      color: '#000000'
     });
 
     const res = await sessionStore.findSession('1234');
     expect(res).toEqual({
       username: 'robie',
-      roomId: 'room'
+      roomId: 'room',
+      userId: '1234',
+      color: '#000000'
     });
   });
 
@@ -31,13 +35,17 @@ describe('session store', () => {
   test('update session', async () => {
     sessionStore.saveSession('1234', {
       username: 'new robie',
-      roomId: 'new room'
+      roomId: 'new room',
+      userId: '1234',
+      color: '#FFFFFF'
     });
 
     const res = await sessionStore.findSession('1234');
     expect(res).toEqual({
       username: 'new robie',
-      roomId: 'new room'
+      roomId: 'new room',
+      userId: '1234',
+      color: '#FFFFFF'
     });
   });
 
@@ -46,18 +54,21 @@ describe('session store', () => {
     const res = await sessionStore.findSession('0');
     expect(res).toEqual({
       username: null,
-      roomId: null
+      roomId: null,
+      userId: null,
+      color: null
     });
   });
 
 });
 
+// TODO: tests for room name and private
 // room store
 describe('room store', () => {
 
   // save room
   test('save room and check existence', async () => {
-    roomStore.saveRoom('123', 'robie');
+    roomStore.saveRoom('123', 'robie', 'robies room', false);
 
     const res = await roomStore.findRoom('123');
     expect(res).toBe(1);
@@ -71,7 +82,7 @@ describe('room store', () => {
 
   // update room
   test('update room', async () => {
-    roomStore.saveRoom('123', 'new robie');
+    roomStore.saveRoom('123', 'new robie', 'new robies room', true);
 
     const res = await roomStore.getRoomOwner('123');
     expect(res).toEqual(['new robie']);

@@ -38,6 +38,22 @@ interface ChatMessageRequest extends ChatMessage {
   roomId: string
 };
 
+interface LoginFormData {
+  username: string,
+};
+
+interface RoomFormData {
+  roomName: string,
+  privateRoom: boolean
+};
+
+interface RoomListItem {
+  roomName: string,
+  owner: string,
+  users: string,
+  roomId: string
+};
+
 // TODO: define events?
 interface ClientToServerEvents extends EventsMap {
 };
@@ -54,5 +70,8 @@ export type {
   UserJoinResponse,
   RoomUser,
   ChatMessage,
-  ChatMessageRequest
+  ChatMessageRequest,
+  LoginFormData,
+  RoomFormData,
+  RoomListItem
 };

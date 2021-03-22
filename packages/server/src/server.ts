@@ -3,7 +3,7 @@ import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { PORT, ORIGIN } from './utils/env';
 import { MangaSocket, RoomResponse, Session } from './types';
-import { sessionStore, roomStore, roomUserStore } from './stores/stores';
+import { sessionStore, roomStore, roomUserStore, publicRoomStore } from './stores/stores';
 import express from 'express';
 import cors from 'cors';
 import * as Socket from './controllers/socket';
@@ -24,7 +24,7 @@ const io = new Server(httpServer, {
 // next type: err?: ExtendedError, idk if to include
 io.use(socketMiddleware);
 
-const { onLogin, createRoom, joinRoom, leaveRoom, newRoom, message, disconnect } = Socket.default(io);
+const { onLogin, createRoom, joinRoom, leaveRoom, newRoom, newRoomName, getRooms, message, disconnect } = Socket.default(io);
 
 io.on('connection', async (socket: MangaSocket) => {
   // emit session details to user
@@ -34,6 +34,8 @@ io.on('connection', async (socket: MangaSocket) => {
   socket.on('JOIN_ROOM', joinRoom);
   socket.on('LEAVE_ROOM', leaveRoom);
   socket.on('NEW_ROOM', newRoom);
+  socket.on('NEW_ROOM_NAME', newRoomName);
+  socket.on('GET_ROOMS', getRooms);
   socket.on('MESSAGE', message);
   socket.on('disconnect', disconnect);
 
@@ -43,6 +45,7 @@ io.on('connection', async (socket: MangaSocket) => {
     roomStore.removeRoom(room);
     // remove room from room users store
     roomUserStore.removeRoom(room);
+    publicRoomStore.removeRoom(room);
   });
 
 });

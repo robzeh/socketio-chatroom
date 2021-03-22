@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { from, fromEvent, Observable } from 'rxjs';
-import { ChatMessage, ChatMessageRequest, RoomResponse, RoomUser, User, UserJoinResponse } from '../types';
+import { ChatMessage, ChatMessageRequest, RoomListItem, RoomResponse, RoomUser, User, UserJoinResponse } from '../models/types';
 
 class SocketService {
   #socket: Socket = {} as Socket;
@@ -25,20 +25,9 @@ class SocketService {
     });
   };
 
-  // session details from server on initialize 
-  //onSession(): Observable<User> {
-  //  // @ts-ignore
-  //  return fromEvent(this.#socket, 'SESSION');
-  //};
-
-  //onLeave(): Observable<string> {
-  //  // @ts-ignore
-  //  return fromEvent(this.#socket, 'USER_LEFT');
-  //}
-
-  createRoom(sessionId: string): Promise<RoomResponse> {
+  createRoom(sessionId: string, roomName: string, privateRoom: boolean): Promise<RoomResponse> {
     return new Promise((resolve) => {
-      this.#socket.emit('CREATE_ROOM', sessionId, (res: RoomResponse) => {
+      this.#socket.emit('CREATE_ROOM', sessionId, roomName, privateRoom, (res: RoomResponse) => {
         if (res.success) {
           resolve({
             success: true,
@@ -86,6 +75,23 @@ class SocketService {
   newRoom(roomId: string): Promise<RoomUser[]> {
     return new Promise((resolve) => {
       this.#socket.emit('NEW_ROOM', roomId, (res: RoomUser[]) => {
+        resolve(res);
+      });
+    });
+  };
+
+  // refactor to observable? so users can change naem
+  newRoomName(roomId: string): Promise<string> {
+    return new Promise((resolve) => {
+      this.#socket.emit('NEW_ROOM_NAME', roomId, (res: string) => {
+        resolve(res);
+      });
+    });
+  };
+
+  getRooms(start: number, end: number): Promise<RoomListItem[]> {
+    return new Promise((resolve) => {
+      this.#socket.emit('GET_ROOMS', start, end, (res: RoomListItem[]) => {
         resolve(res);
       });
     });

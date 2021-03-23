@@ -7,7 +7,7 @@ const loginValidation = {
   },
   pattern: {
     value: /^[\w\-\.\s]+$/,
-    message: 'Username must only contain alphanumeric characters, spaces, underscores, dashes or periods'
+    message: 'Username can\'t contain special characters'
   },
 };
 
@@ -19,7 +19,7 @@ const roomNameValidation = {
   },
   pattern: {
     value: /^[\w\-\.\s]+$/,
-    message: 'Roomname must only contain alphanumeric characters, spaces, underscores, dashes or periods'
+    message: 'Roomname can\'t contain special characters'
   },
 };
 

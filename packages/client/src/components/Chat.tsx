@@ -1,5 +1,4 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
@@ -22,19 +21,15 @@ const Chat = ({ roomId }: ChatProps) => {
    * input area
    */
   return (
-    <Container>
+    <div>
       <h1>Hello {userDetails.username}</h1>
       <p>You are in room: {roomId}</p>
       <Users roomId={roomId} />
       <Messages roomId={roomId} />
       <ChatFooter roomId={roomId} />
-    </Container>
+    </div>
   );
 
 };
 
 export { Chat };
-
-const Container = styled.div`
-  width: 150px;
-`;

@@ -4,6 +4,7 @@ import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
 import { RoomResponse, UserContextType } from '../models/types';
 import { Chat } from './Chat';
+import { Box, Flex } from '@chakra-ui/react';
 
 type RoomProps = {
   roomId: string,
@@ -39,11 +40,13 @@ const Room = ({ roomId, leaveRoom }: RoomProps) => {
   };
 
   return (
-    <div>
-      <h1>{roomName}</h1>
-      <button onClick={leave}>Leave Room</button>
+    <Flex h='100vh'>
+      <Box>
+        <h1>{roomName}</h1>
+        <button onClick={leave}>Leave Room</button>
+      </Box>
       <Chat roomId={roomId} />
-    </div>
+    </Flex>
   );
 
 };

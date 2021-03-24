@@ -6,6 +6,7 @@ import { UserContextType } from '../models/types';
 import { ChatFooter } from './ChatFooter';
 import { Messages } from './Messages';
 import { Users } from './Users';
+import { Flex } from '@chakra-ui/react';
 
 type ChatProps = {
   roomId: string
@@ -21,13 +22,13 @@ const Chat = ({ roomId }: ChatProps) => {
    * input area
    */
   return (
-    <div>
+    <Flex direction='column'>
       <h1>Hello {userDetails.username}</h1>
       <p>You are in room: {roomId}</p>
       <Users roomId={roomId} />
       <Messages roomId={roomId} />
       <ChatFooter roomId={roomId} />
-    </div>
+    </Flex>
   );
 
 };

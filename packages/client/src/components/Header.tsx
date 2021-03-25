@@ -40,7 +40,7 @@ const Header = ({ roomId, leaveRoom }: HeaderProps) => {
 
   return (
     <Box bg='gray.600' px={4}>
-      <Flex h={14} alignItems='center' justifyContent='space-between' >
+      <Flex h='8vh' alignItems='center' justifyContent='space-between' >
         {roomId ? (
           <Button onClick={leave}>Leave Room</Button>
         ) : (
@@ -51,7 +51,6 @@ const Header = ({ roomId, leaveRoom }: HeaderProps) => {
             <Icon as={FaRegUser} />
           </MenuButton>
           <MenuList>
-            <MenuItem>Change Username</MenuItem>
             <MenuItem onClick={logout}>Logout</MenuItem>
           </MenuList>
         </Menu>

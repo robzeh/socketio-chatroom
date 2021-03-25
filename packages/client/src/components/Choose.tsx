@@ -28,7 +28,7 @@ const Choose = ({ handleCreate, handleJoin }: ChooseProps) => {
    */
 
   return (
-    <Center h='100vh'>
+    <Center h='92vh'>
       {roomForm && <RoomForm toggleForm={setRoomForm} handleCreate={handleCreate} />}
       {roomList && <RoomList toggleList={setRoomList} handleJoin={handleJoin} />}
       {!roomList && !roomForm && (

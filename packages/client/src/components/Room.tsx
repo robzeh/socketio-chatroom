@@ -22,7 +22,7 @@ const Room = ({ roomId }: RoomProps) => {
   }, []);
 
   return (
-    <Flex h='100vh'>
+    <Flex>
       <Box>
         <h1>{roomName}</h1>
       </Box>

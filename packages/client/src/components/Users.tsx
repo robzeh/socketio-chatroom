@@ -4,6 +4,7 @@ import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
 import { RoomUser, UserContextType } from '../models/types';
 import { User } from './User';
+import { Box } from '@chakra-ui/react';
 
 type UsersProps = {
   roomId: string
@@ -47,12 +48,12 @@ const Users = ({ roomId }: UsersProps) => {
   }, []);
 
   return (
-    <>
+    <Box h='15vh'>
       <h2>Users</h2>
       {users.map((user: RoomUser) => (
         <User details={user} />
       ))}
-    </>
+    </Box>
   );
 
 };

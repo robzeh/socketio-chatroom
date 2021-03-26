@@ -22,9 +22,7 @@ const Chat = ({ roomId }: ChatProps) => {
    * input area
    */
   return (
-    <Flex direction='column'>
-      <h1>Hello {userDetails.username}</h1>
-      <p>You are in room: {roomId}</p>
+    <Flex direction='column' w='30vw'>
       <Users roomId={roomId} />
       <Messages roomId={roomId} />
       <ChatFooter roomId={roomId} />

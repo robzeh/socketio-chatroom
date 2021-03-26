@@ -5,7 +5,7 @@ import { SocketService } from '../services/SocketService';
 import { ChatMessageRequest, UserContextType } from '../models/types';
 import { useForm } from 'react-hook-form';
 import { messageValidation } from '../models/schemas';
-import { Box, Button, Flex, Input } from '@chakra-ui/react';
+import { Box, Button, Flex, FormControl, Input } from '@chakra-ui/react';
 
 type ChatFooterProps = {
   roomId: string
@@ -30,12 +30,14 @@ const ChatFooter = ({ roomId }: ChatFooterProps) => {
   });
 
   return (
-    <Flex>
+    <Box>
       <form onSubmit={onSubmit}>
-        <Input name='message' type='text' ref={register(messageValidation)} placeholder='Send a message...' autoComplete='off' />
-        <Button type='submit'>Send</Button>
+        <FormControl display='flex' flexDirection='row' justifyContent='space-between'>
+          <Input name='message' type='text' ref={register(messageValidation)} placeholder='Send a message...' autoComplete='off' w='80%' />
+          <Button type='submit' mr={3}>Send</Button>
+        </FormControl>
       </form>
-    </Flex>
+    </Box>
   );
 
 };

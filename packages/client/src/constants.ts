@@ -7,6 +7,7 @@ const INITIAL_USER_DETAILS = {
 };
 
 const INITIAL_ROOM_STATE = {
+  roomName: '',
   users: 0,
   ready: 0
 };

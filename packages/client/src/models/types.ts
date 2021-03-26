@@ -54,7 +54,13 @@ interface RoomListItem {
   roomId: string
 };
 
+interface RoomContextType {
+  state: RoomState,
+  dispatch: RoomDispatch
+};
+
 interface RoomState {
+  roomName: string,
   users: number,
   ready: number
 };
@@ -62,9 +68,12 @@ interface RoomState {
 type RoomDispatch = (action: RoomAction) => void;
 
 type RoomAction =
+  { type: 'roomName', payload: string } |
   { type: 'setUsers', payload: number } |
   { type: 'userJoin' } |
-  { type: 'userLeft' }
+  { type: 'userLeft' } |
+  { type: 'userReady' } |
+  { type: 'reset' }
 
 // TODO: define events?
 interface ClientToServerEvents extends EventsMap {
@@ -88,5 +97,6 @@ export type {
   RoomListItem,
   RoomState,
   RoomDispatch,
-  RoomAction
+  RoomAction,
+  RoomContextType
 };

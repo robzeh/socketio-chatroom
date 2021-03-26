@@ -1,20 +1,18 @@
 import * as React from 'react';
 import { INITIAL_ROOM_STATE } from '../constants';
-import { RoomState, RoomDispatch, RoomAction } from '../models/types';
+import { RoomState, RoomDispatch, RoomAction, RoomContextType } from '../models/types';
 
 type RoomProviderProps = {
   children: React.ReactNode
-};
-
-interface RoomContextType {
-  state: RoomState,
-  dispatch: RoomDispatch
 };
 
 const RoomContext = React.createContext<RoomContextType | undefined>(undefined);
 
 const roomReducer = (state: RoomState, action: RoomAction) => {
   switch (action.type) {
+    case 'roomName': {
+      return { ...state, roomName: action.payload };
+    }
     case 'setUsers': {
       return { ...state, users: action.payload };
     }
@@ -24,6 +22,16 @@ const roomReducer = (state: RoomState, action: RoomAction) => {
     case 'userLeft': {
       return { ...state, users: state.users - 1 };
     };
+    case 'userReady': {
+      return { ...state, ready: state.ready + 1 };
+    };
+    case 'reset': {
+      return {
+        roomName: '',
+        users: 0,
+        ready: 0
+      };
+    }
     default: {
       throw new Error('Unhandled action type')
     }

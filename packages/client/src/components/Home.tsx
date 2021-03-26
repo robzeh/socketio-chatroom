@@ -6,6 +6,7 @@ import { SocketService } from '../services/SocketService';
 import { RoomFormData, RoomResponse, User, UserContextType } from '../models/types';
 import { Choose } from './Choose';
 import { Room } from './Room';
+import { Header } from './Header';
 
 type HomeProps = {
 
@@ -92,8 +93,9 @@ const Home = ({ }: HomeProps) => {
 
   return (
     <>
+      <Header roomId={roomId} leaveRoom={id => setRoomId(id)} />
       {roomId ? (
-        <Room roomId={roomId} leaveRoom={id => setRoomId(id)} />
+        <Room roomId={roomId} />
       ) : (
         <Choose handleCreate={createRoom} handleJoin={joinRoom} />
       )}

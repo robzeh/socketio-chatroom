@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import styled from 'styled-components';
 import { useToggle } from '../hooks/useToggle';
 import { roomCodeValidation } from '../models/schemas';
 import { RoomFormData } from '../models/types';
 import { RoomForm } from './RoomForm';
 import { RoomList } from './RoomList';
+import { Box, Button, Center, Container, Flex, FormControl, FormErrorMessage, Input, Stack } from '@chakra-ui/react';
 
 type ChooseProps = {
   handleCreate: ({ roomName, privateRoom }: RoomFormData) => Promise<void>,
@@ -28,108 +28,33 @@ const Choose = ({ handleCreate, handleJoin }: ChooseProps) => {
    */
 
   return (
-    <Container>
-      <CardContainer>
-        {roomForm && <RoomForm toggleForm={setRoomForm} handleCreate={handleCreate} />}
-        {roomList && <RoomList toggleList={setRoomList} handleJoin={handleJoin} />}
-        {!roomList && !roomForm && (
-          <>
-            <Card>
-              <Form>
-                <Button onClick={setRoomForm}>Create Room</Button>
-              </Form>
-            </Card>
-            <Card>
-              <Form onSubmit={onSubmit}>
-                <Input type='text' name='roomId' ref={register(roomCodeValidation)} placeholder='Room Code' autoComplete='off' />
-                <Button type='submit'>Join Room</Button>
-                {errors.roomId && <div>{errors.roomId.message}</div>}
-              </Form>
-            </Card>
-            <Card>
-              <Form>
-                <Button onClick={setRoomList}>Find a room</Button>
-              </Form>
-            </Card>
-          </>
-        )}
-      </CardContainer>
-    </Container>
+    <Center h='92vh'>
+      {roomForm && <RoomForm toggleForm={setRoomForm} handleCreate={handleCreate} />}
+      {roomList && <RoomList toggleList={setRoomList} handleJoin={handleJoin} />}
+      {!roomList && !roomForm && (
+        <Stack direction={["column", "column", "column", "row"]}>
+          <Box p={6} minH='150px' minW='285px' boxShadow='base' rounded='md' d='flex' alignItems='center' justifyContent='center'>
+            <Button onClick={setRoomForm}>Create Room</Button>
+          </Box>
+          <Box p={6} minH='150px' minW='285px' boxShadow='base' rounded='md'>
+            <form onSubmit={onSubmit}>
+              <FormControl isInvalid={errors.roomId ? true : false} display='flex' flexDirection='column' alignItems='center' justifyItems='center'>
+                <Input w='50%' type='text' name='roomId' ref={register(roomCodeValidation)} placeholder='Room Code' autoComplete='off' />
+                <FormErrorMessage w='100'>
+                  {errors.roomId && errors.roomId.message}
+                </FormErrorMessage>
+                <Button type='submit' mt={2}>Join Room</Button>
+              </FormControl>
+            </form>
+          </Box>
+          <Box p={6} minH='150px' minW='285px' boxShadow='base' rounded='md' d='flex' alignItems='center' justifyContent='center'>
+            <Button onClick={setRoomList}>Find a room</Button>
+          </Box>
+        </Stack>
+      )}
+    </Center>
   );
 
 };
 
 export { Choose };
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-`;
-
-const Form = styled.form`
-  width: 50%;
-`;
-
-const Card = styled.div`
-  width: 100%;
-  min-height: 100px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  border-radius: 3px;
-  margin: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const CardContainer = styled.div`
-  width: 100%;
-  max-width: 320px;
-  min-width: 200px;
-  min-height: 95vh;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  @media (min-width: 769px) {
-    flex-direction: row;
-    max-width: 640px;
-  }
-`;
-
-const Button = styled.button`
-  width: 100%;
-`;
-
-const Input = styled.input`
-  width: 100%;
-`;
-//
-//        {roomList ? (
-//          <>
-//            <Card>
-//              <p>Rooms</p>
-//              <button onClick={() => setRoomList(!roomList)}>Go back</button>
-//            </Card>
-//          </>
-//        ) : (
-//          <>
-//            <Card>
-//              <Form onSubmit={handleCreate}>
-//                <Button type='submit'>Create Room</Button>
-//              </Form>
-//            </Card>
-//            <Card>
-//              <Form onSubmit={handleJoin}>
-//                <Input type='text' ref={ref} placeholder='Room Code' />
-//                <Button type='submit'>Join Room</Button>
-//              </Form>
-//            </Card>
-//            <Card>
-//              <Form onSubmit={() => setRoomList(!roomList)}>
-//                <Button type='submit'>Find a room</Button>
-//              </Form>
-//            </Card>
-//          </>
-//        )}

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
@@ -7,6 +6,7 @@ import { UserContextType } from '../models/types';
 import { ChatFooter } from './ChatFooter';
 import { Messages } from './Messages';
 import { Users } from './Users';
+import { Flex } from '@chakra-ui/react';
 
 type ChatProps = {
   roomId: string
@@ -22,19 +22,13 @@ const Chat = ({ roomId }: ChatProps) => {
    * input area
    */
   return (
-    <Container>
-      <h1>Hello {userDetails.username}</h1>
-      <p>You are in room: {roomId}</p>
+    <Flex direction='column' w='30vw'>
       <Users roomId={roomId} />
       <Messages roomId={roomId} />
       <ChatFooter roomId={roomId} />
-    </Container>
+    </Flex>
   );
 
 };
 
 export { Chat };
-
-const Container = styled.div`
-  width: 150px;
-`;

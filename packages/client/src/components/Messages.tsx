@@ -3,6 +3,7 @@ import { useSocket } from '../contexts/SocketProvider';
 import { SocketService } from '../services/SocketService';
 import { ChatMessage } from '../models/types';
 import { Message } from './Message';
+import { Box } from '@chakra-ui/react';
 
 type MessagesProps = {
   roomId: string
@@ -11,6 +12,10 @@ type MessagesProps = {
 const Messages = ({ roomId }: MessagesProps) => {
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
   const socket: SocketService = useSocket();
+
+  const setRef = React.useCallback((node) => {
+    if (node) node.scrollIntoView({ smooth: true });
+  }, []);
 
   // message subscription
   React.useEffect(() => {
@@ -28,11 +33,17 @@ const Messages = ({ roomId }: MessagesProps) => {
   }, [socket]);
 
   return (
-    <>
-      {messages.map((m: ChatMessage) => (
-        <Message details={m} />
-      ))}
-    </>
+    <Box h='60vh' p={2} mb={2} overflow='scroll' overflowX='hidden'>
+      {messages.map((m: ChatMessage, index: number) => {
+        const lastMessage = messages.length - 1 === index;
+        return (
+          <>
+            <Message details={m} />
+            <div ref={lastMessage ? setRef : null} />
+          </>
+        )
+      })}
+    </Box>
   );
 
 };

@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
-import styled from 'styled-components';
 import { useUser } from '../contexts/UserProvider';
 import { LoginFormData, UserContextType } from '../models/types';
 import { useForm } from 'react-hook-form';
 import { loginValidation } from '../models/schemas';
+import { Box, Button, Center, FormControl, FormErrorMessage, FormLabel, Heading, Input } from '@chakra-ui/react';
 
 
 const Login = () => {
   const { userDetails, setUserDetails }: UserContextType = useUser();
-  const { register, handleSubmit, errors } = useForm<LoginFormData>();
+  const { register, handleSubmit, errors, formState } = useForm<LoginFormData>();
   const history = useHistory();
 
   // check if they had a username
@@ -28,66 +28,31 @@ const Login = () => {
   });
 
   return (
-    <Container>
-      <Form onSubmit={onSubmit}>
-        <Label>Name</Label>
-        <Div>
-          <Input type='text' name='username' ref={register(loginValidation)} placeholder='Enter a username...' autoComplete='off' />
-          {errors.username && <div>{errors.username.message}</div>}
-        </Div>
-        <Div>
-          <Button type='submit'>Login</Button>
-        </Div>
-      </Form>
-    </Container>
+    <Center h='100vh'>
+      <Box p={6} boxShadow='base' rounded='md'>
+        <Box>
+          <Heading textAlign='center'>manga2gether</Heading>
+        </Box>
+        <Box mt={4}>
+          <form onSubmit={onSubmit} >
+            <FormControl isInvalid={errors.username ? true : false}>
+              <FormLabel>Username</FormLabel>
+              <Input name='username' ref={register(loginValidation)} placeholder='Enter a username...' autoComplete='off' size='lg' />
+              <FormErrorMessage>
+                {errors.username && errors.username.message}
+              </FormErrorMessage>
+            </FormControl>
+            <Center>
+              <Button type='submit' mt={2} w='100%'>
+                Login
+              </Button>
+            </Center>
+          </form>
+        </Box>
+      </Box>
+    </Center>
   );
 
 };
 
 export { Login };
-
-const Label = styled.label`
-  font-size: 14px;
-  margin-bottom: 2px;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Form = styled.form`
-  position: fixed;
-  width: 100%;
-  max-width: 320px;
-  min-width: 200px;
-  min-height: 95vh;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Div = styled.div`
-  align-items: center;
-  width: 100%;
-  font-size: 15px;
-  line-height: 26px;
-  cursor: text;
-  margin-top: 4px;
-  margin-bottom: 8px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  display: block;
-  font-size: inherit;
-  line-height: inherit;
-`;
-
-const Button = styled.button`
-  width: 100%;
-  align-items: center;
-  height: 30px;
-`;

@@ -12,14 +12,14 @@ const loginValidation = {
 };
 
 const roomNameValidation = {
-  required: 'Roomname must be provided',
+  required: 'Room name must be provided',
   maxLength: {
     value: 20,
-    message: 'Roomname must be less than 20 characters'
+    message: 'Room name must be less than 20 characters'
   },
   pattern: {
-    value: /^[\w\-\.\s]+$/,
-    message: 'Roomname can\'t contain special characters'
+    value: /^[\w\-\.\'\s]+$/,
+    message: 'Room name can\'t contain special characters'
   },
 };
 

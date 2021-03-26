@@ -14,8 +14,6 @@ const RoomContent = ({ }: RoomContentProps) => {
   return (
     <Box w='70vw'>
       <Box h='80vh'>
-        <h1>ahha</h1>
-        <p>{state.users}</p>
       </Box>
       <RoomFooter />
     </Box>

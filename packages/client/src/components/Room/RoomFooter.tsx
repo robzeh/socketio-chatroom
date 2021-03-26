@@ -22,7 +22,7 @@ const RoomFooter = ({ }: RoomFooterProps) => {
         <Heading>{state.roomName}</Heading>
         <Box d='flex' alignItems='center' justifyContent='center'>
           <p>{state.ready}/{state.users}</p>
-          <Button onClick={onSubmit} ml={2}>Ready</Button>
+          <Button onClick={onSubmit} ml={2} size='sm'>Ready</Button>
         </Box>
       </Flex>
     </Box>

@@ -3,6 +3,7 @@ import { useSocket } from '../contexts/SocketProvider';
 import { SocketService } from '../services/SocketService';
 import { Chat } from './Chat';
 import { Box, Flex } from '@chakra-ui/react';
+import { RoomContent } from './RoomContent';
 
 type RoomProps = {
   roomId: string,
@@ -23,9 +24,7 @@ const Room = ({ roomId }: RoomProps) => {
 
   return (
     <Flex h='92vh' w='100vw'>
-      <Box w='70vw'>
-        <h1>{roomName}</h1>
-      </Box>
+      <RoomContent />
       <Chat roomId={roomId} />
     </Flex>
   );

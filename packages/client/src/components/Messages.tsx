@@ -33,7 +33,7 @@ const Messages = ({ roomId }: MessagesProps) => {
   }, [socket]);
 
   return (
-    <Box h='70vh' p={2} mb={2} overflow='scroll' overflowX='hidden'>
+    <Box h='60vh' p={2} mb={2} overflow='scroll' overflowX='hidden'>
       {messages.map((m: ChatMessage, index: number) => {
         const lastMessage = messages.length - 1 === index;
         return (

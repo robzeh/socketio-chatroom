@@ -48,7 +48,7 @@ const Users = ({ roomId }: UsersProps) => {
   }, []);
 
   return (
-    <Box h='15vh'>
+    <Box h='20vh'>
       <h2>Users</h2>
       {users.map((user: RoomUser) => (
         <User details={user} />

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Box } from '@chakra-ui/react';
-import { useRoom } from '../contexts/RoomProvider';
-import { RoomContextType } from '../models/types';
-import { RoomFooter } from './Room/RoomFooter';
+import { useRoom } from '../../contexts/RoomProvider';
+import { RoomContextType } from '../../models/types';
+import { RoomFooter } from './RoomFooter';
 
 type RoomContentProps = {
 

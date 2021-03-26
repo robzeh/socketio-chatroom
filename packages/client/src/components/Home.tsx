@@ -5,7 +5,7 @@ import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
 import { RoomContextType, RoomFormData, RoomResponse, User, UserContextType } from '../models/types';
 import { Choose } from './Choose';
-import { Room } from './Room';
+import { Room } from './Room/Room';
 import { Header } from './Header';
 import { useRoom } from '../contexts/RoomProvider';
 

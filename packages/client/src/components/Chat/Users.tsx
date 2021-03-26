@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useSocket } from '../contexts/SocketProvider';
-import { useUser } from '../contexts/UserProvider';
-import { SocketService } from '../services/SocketService';
-import { RoomUser, UserContextType } from '../models/types';
+import { useSocket } from '../../contexts/SocketProvider';
+import { useUser } from '../../contexts/UserProvider';
+import { SocketService } from '../../services/SocketService';
+import { RoomUser, UserContextType } from '../../models/types';
 import { User } from './User';
 import { Box } from '@chakra-ui/react';
-import { useRoom } from '../contexts/RoomProvider';
+import { useRoom } from '../../contexts/RoomProvider';
 
 type UsersProps = {
   roomId: string

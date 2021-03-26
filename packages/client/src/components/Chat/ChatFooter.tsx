@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useSocket } from '../contexts/SocketProvider';
-import { useUser } from '../contexts/UserProvider';
-import { SocketService } from '../services/SocketService';
-import { ChatMessageRequest, UserContextType } from '../models/types';
+import { useSocket } from '../../contexts/SocketProvider';
+import { useUser } from '../../contexts/UserProvider';
+import { SocketService } from '../../services/SocketService';
+import { ChatMessageRequest, UserContextType } from '../../models/types';
 import { useForm } from 'react-hook-form';
-import { messageValidation } from '../models/schemas';
+import { messageValidation } from '../../models/schemas';
 import { Box, Button, Center, Flex, FormControl, Input } from '@chakra-ui/react';
 
 type ChatFooterProps = {

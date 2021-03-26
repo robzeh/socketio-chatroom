@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { useToggle } from '../hooks/useToggle';
 import { roomCodeValidation } from '../models/schemas';
 import { RoomFormData } from '../models/types';
-import { RoomForm } from './RoomForm';
-import { RoomList } from './RoomList';
+import { RoomForm } from './Room/RoomForm';
+import { RoomList } from './Room/RoomList';
 import { Box, Button, Center, Container, Flex, FormControl, FormErrorMessage, Input, Stack } from '@chakra-ui/react';
 
 type ChooseProps = {

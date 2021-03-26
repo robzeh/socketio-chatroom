@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useSocket } from '../contexts/SocketProvider';
-import { RoomListItem } from '../models/types';
-import { SocketService } from '../services/SocketService';
+import { useSocket } from '../../contexts/SocketProvider';
+import { RoomListItem } from '../../models/types';
+import { SocketService } from '../../services/SocketService';
 import { RoomLItem } from './RoomLItem';
 import { Box, Button, Flex, Tab, Table, TabList, Tabs, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 

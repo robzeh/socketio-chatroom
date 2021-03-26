@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { RoomFormData, UserContextType } from '../models/types';
-import { ToggleButton } from './ToggleButton';
+import { RoomFormData, UserContextType } from '../../models/types';
 import { useForm } from 'react-hook-form';
-import { useToggle } from '../hooks/useToggle';
-import { roomNameValidation } from '../models/schemas';
+import { useToggle } from '../../hooks/useToggle';
+import { roomNameValidation } from '../../models/schemas';
 import { Box, Button, Container, FormControl, FormErrorMessage, FormLabel, Input, Spacer, Switch } from '@chakra-ui/react';
-import { useUser } from '../contexts/UserProvider';
+import { useUser } from '../../contexts/UserProvider';
 
 type RoomFormProps = {
   toggleForm: (event: React.FormEvent<HTMLButtonElement>) => void,

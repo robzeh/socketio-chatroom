@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RoomUser } from '../models/types';
+import { RoomUser } from '../../models/types';
 
 type UserProps = {
   details: RoomUser

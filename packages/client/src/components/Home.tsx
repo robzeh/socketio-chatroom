@@ -3,10 +3,11 @@ import { useHistory } from 'react-router';
 import { useSocket } from '../contexts/SocketProvider';
 import { useUser } from '../contexts/UserProvider';
 import { SocketService } from '../services/SocketService';
-import { RoomFormData, RoomResponse, User, UserContextType } from '../models/types';
+import { RoomContextType, RoomFormData, RoomResponse, User, UserContextType } from '../models/types';
 import { Choose } from './Choose';
-import { Room } from './Room';
+import { Room } from './Room/Room';
 import { Header } from './Header';
+import { useRoom } from '../contexts/RoomProvider';
 
 type HomeProps = {
 
@@ -14,6 +15,7 @@ type HomeProps = {
 
 const Home = ({ }: HomeProps) => {
   const { userDetails, setUserDetails }: UserContextType = useUser();
+  const { dispatch }: RoomContextType = useRoom();
   const socket: SocketService = useSocket();
   const history = useHistory();
   const [roomId, setRoomId] = React.useState<string>('');
@@ -51,6 +53,7 @@ const Home = ({ }: HomeProps) => {
           setRoomId(res.roomId);
         } else {
           setRoomId('');
+          dispatch({ type: 'reset' });
         }
       };
       tryRoom();

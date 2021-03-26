@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { useSocket } from '../contexts/SocketProvider';
-import { SocketService } from '../services/SocketService';
-import { Chat } from './Chat';
+import { useSocket } from '../../contexts/SocketProvider';
+import { SocketService } from '../../services/SocketService';
+import { Chat } from '../Chat/Chat';
 import { Box, Flex } from '@chakra-ui/react';
 import { RoomContent } from './RoomContent';
+import { useRoom } from '../../contexts/RoomProvider';
+import { RoomContextType } from '../../models/types';
 
 type RoomProps = {
   roomId: string,
@@ -11,13 +13,12 @@ type RoomProps = {
 
 const Room = ({ roomId }: RoomProps) => {
   const socket: SocketService = useSocket();
-  const [roomName, setRoomName] = React.useState<string>('');
+  const { state, dispatch }: RoomContextType = useRoom();
 
   React.useEffect(() => {
     const getRoomName = async () => {
-      const name = await socket.newRoomName(roomId);
-      console.log(name);
-      setRoomName(name);
+      const name: string = await socket.newRoomName(roomId);
+      dispatch({ type: 'roomName', payload: name });
     };
     getRoomName();
   }, []);

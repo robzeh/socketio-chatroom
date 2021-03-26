@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { useSocket } from '../contexts/SocketProvider';
-import { useUser } from '../contexts/UserProvider';
-import { SocketService } from '../services/SocketService';
-import { RoomUser, UserContextType } from '../models/types';
+import { useSocket } from '../../contexts/SocketProvider';
+import { useUser } from '../../contexts/UserProvider';
+import { SocketService } from '../../services/SocketService';
+import { RoomUser, UserContextType } from '../../models/types';
 import { User } from './User';
 import { Box } from '@chakra-ui/react';
+import { useRoom } from '../../contexts/RoomProvider';
 
 type UsersProps = {
   roomId: string
@@ -14,6 +15,7 @@ const Users = ({ roomId }: UsersProps) => {
   // type array of User?
   const [users, setUsers] = React.useState<RoomUser[]>([]);
   const { userDetails }: UserContextType = useUser();
+  const { state, dispatch } = useRoom();
   const socket: SocketService = useSocket();
 
   // on room join, get existing users
@@ -22,6 +24,11 @@ const Users = ({ roomId }: UsersProps) => {
       const existingUsers: RoomUser[] = await socket.newRoom(roomId);
       console.log(existingUsers);
       setUsers(existingUsers);
+      dispatch({
+        type: 'setUsers',
+        payload: existingUsers.length
+      });
+      console.log(state.users);
     };
     getExistingUsers();
   }, []);
@@ -35,10 +42,12 @@ const Users = ({ roomId }: UsersProps) => {
         color: color
       }
       setUsers((prevUsers) => [...prevUsers, newUser]);
+      dispatch({ type: 'userJoin' });
     })
 
     const userLeaveSubscription = socket.onLeave().subscribe(({ userId }: RoomUser) => {
       setUsers((prevUsers) => prevUsers.filter((user) => user.userId !== userId));
+      dispatch({ type: 'userLeft' });
     });
 
     return () => {

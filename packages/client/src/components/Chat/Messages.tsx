@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useSocket } from '../contexts/SocketProvider';
-import { SocketService } from '../services/SocketService';
-import { ChatMessage } from '../models/types';
+import { useSocket } from '../../contexts/SocketProvider';
+import { SocketService } from '../../services/SocketService';
+import { ChatMessage } from '../../models/types';
 import { Message } from './Message';
 import { Box } from '@chakra-ui/react';
 

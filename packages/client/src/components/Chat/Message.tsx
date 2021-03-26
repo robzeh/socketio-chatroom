@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChatMessage } from '../models/types';
+import { ChatMessage } from '../../models/types';
 
 type MessageProps = {
   details: ChatMessage

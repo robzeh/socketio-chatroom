@@ -191,8 +191,12 @@ export default function (io: Server) {
     cb(roomItems);
   };
 
-  const message = async function ({ username, message, roomId, color }: ChatMessage) {
+  const message = function ({ username, message, roomId, color }: ChatMessage) {
     io.in(roomId).emit('MESSAGE', ({ username, message, color }));
+  };
+
+  const ready = function (roomId: string) {
+    io.in(roomId).emit('USER_READY', ('userReady'));
   };
 
   const disconnect = async function () {
@@ -227,7 +231,8 @@ export default function (io: Server) {
     newRoomName,
     getRooms,
     message,
-    disconnect
+    disconnect,
+    ready
   };
 
 };

@@ -22,7 +22,7 @@ const ChatFooter = ({ roomId }: ChatFooterProps) => {
       message: message,
       roomId: roomId,
       userId: userDetails.userId,
-      color: '' // TODO
+      color: userDetails.color
     };
 
     socket.sendMessage(messageDetails);

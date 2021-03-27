@@ -1,6 +1,7 @@
 import { sessionStore } from '../stores/stores';
 import { MangaSocket, Session } from '../types'
 import { v4 as uuidv4 } from 'uuid';
+import { colors, getColor } from '../utils/color';
 
 const socketMiddleware = async (socket: MangaSocket, next: (err?: any) => void) => {
   // check if existing sessionId
@@ -28,7 +29,7 @@ const socketMiddleware = async (socket: MangaSocket, next: (err?: any) => void) 
   socket.username = username;
   socket.roomId = ''; // new user has no existing room to join
   socket.userId = sessId.substring(0, 4).toUpperCase(); // first 4 characters of session id
-  socket.color = ''; // generate color client or server side?
+  socket.color = colors[getColor()];
 
   next();
 

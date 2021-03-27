@@ -97,6 +97,10 @@ class SocketService {
     });
   };
 
+  userReady(roomId: string): void {
+    this.#socket.emit('USER_READY', roomId);
+  };
+
   sendMessage(message: ChatMessageRequest): void {
     this.#socket.emit('MESSAGE', message);
   };
@@ -104,6 +108,12 @@ class SocketService {
   onMessage(): Observable<ChatMessage> {
     // @ts-ignore
     return fromEvent(this.#socket, 'MESSAGE');
+  };
+
+  // empty observable?
+  onReady(): Observable<string> {
+    // @ts-ignore
+    return fromEvent(this.#socket, 'USER_READY');
   };
 
   onJoin(): Observable<RoomUser> {

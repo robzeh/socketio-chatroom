@@ -24,7 +24,7 @@ const io = new Server(httpServer, {
 // next type: err?: ExtendedError, idk if to include
 io.use(socketMiddleware);
 
-const { onLogin, createRoom, joinRoom, leaveRoom, newRoom, newRoomName, getRooms, message, disconnect } = Socket.default(io);
+const { onLogin, createRoom, joinRoom, leaveRoom, newRoom, newRoomName, getRooms, message, ready, disconnect } = Socket.default(io);
 
 io.on('connection', async (socket: MangaSocket) => {
   // emit session details to user
@@ -37,6 +37,7 @@ io.on('connection', async (socket: MangaSocket) => {
   socket.on('NEW_ROOM_NAME', newRoomName);
   socket.on('GET_ROOMS', getRooms);
   socket.on('MESSAGE', message);
+  socket.on('USER_READY', ready);
   socket.on('disconnect', disconnect);
 
   // socket.io automatically removes empty rooms, remove from our store too

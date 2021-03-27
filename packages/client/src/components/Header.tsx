@@ -43,7 +43,7 @@ const Header = ({ roomId, leaveRoom }: HeaderProps) => {
   };
 
   return (
-    <Box bg='gray.600' px={4}>
+    <Box bg='blue.700' px={4}>
       <Flex h='8vh' alignItems='center' justifyContent='space-between' >
         {roomId ? (
           <Button onClick={leave}>Leave Room</Button>

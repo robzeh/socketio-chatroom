@@ -5,7 +5,7 @@ import { Chat } from '../Chat/Chat';
 import { Box, Flex } from '@chakra-ui/react';
 import { RoomContent } from './RoomContent';
 import { useRoom } from '../../contexts/RoomProvider';
-import { RoomContextType } from '../../models/types';
+import { RoomContextType, RoomState } from '../../models/types';
 
 type RoomProps = {
   roomId: string,
@@ -16,11 +16,12 @@ const Room = ({ roomId }: RoomProps) => {
   const { state, dispatch }: RoomContextType = useRoom();
 
   React.useEffect(() => {
-    const getRoomName = async () => {
-      const name: string = await socket.newRoomName(roomId);
-      dispatch({ type: 'roomName', payload: name });
+    const getRoomDetails = async () => {
+      const roomDetails: Partial<RoomState> = await socket.newRoomDetails(roomId);
+      dispatch({ type: 'roomName', payload!: roomDetails.roomName });
+      dispatch({ type: 'setOwner', payload!: roomDetails.roomOwner });
     };
-    getRoomName();
+    getRoomDetails();
   }, []);
 
   return (

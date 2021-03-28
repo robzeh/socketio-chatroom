@@ -57,19 +57,23 @@ interface RoomListItem {
 interface RoomContextType {
   state: RoomState,
   dispatch: RoomDispatch
+
 };
 
+// fix ?;  ???
 interface RoomState {
-  roomName: string,
+  roomName?: string,
   users: number,
-  ready: number
+  ready: number,
+  roomOwner?: string
 };
 
 type RoomDispatch = (action: RoomAction) => void;
 
 type RoomAction =
-  { type: 'roomName', payload: string } |
+  { type: 'roomName', payload?: string } |
   { type: 'setUsers', payload: number } |
+  { type: 'setOwner', payload?: string } |
   { type: 'userJoin' } |
   { type: 'userLeft' } |
   { type: 'userReady' } |

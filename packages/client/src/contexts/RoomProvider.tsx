@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { INITIAL_ROOM_STATE } from '../constants';
+import { INITIAL_ROOM_STATE } from '../models/constants';
 import { RoomState, RoomDispatch, RoomAction, RoomContextType } from '../models/types';
 
 type RoomProviderProps = {
@@ -25,11 +25,15 @@ const roomReducer = (state: RoomState, action: RoomAction) => {
     case 'userReady': {
       return { ...state, ready: state.ready + 1 };
     };
+    case 'setOwner': {
+      return { ...state, roomOwner: action.payload };
+    };
     case 'reset': {
       return {
         roomName: '',
         users: 0,
-        ready: 0
+        ready: 0,
+        roomOwner: ''
       };
     }
     default: {

@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { from, fromEvent, Observable } from 'rxjs';
-import { ChatMessage, ChatMessageRequest, RoomListItem, RoomResponse, RoomUser, User, UserJoinResponse } from '../models/types';
+import { ChatMessage, ChatMessageRequest, RoomListItem, RoomResponse, RoomState, RoomUser, User, UserJoinResponse } from '../models/types';
 
 class SocketService {
   #socket: Socket = {} as Socket;
@@ -81,10 +81,13 @@ class SocketService {
   };
 
   // refactor to observable? so users can change naem
-  newRoomName(roomId: string): Promise<string> {
+  newRoomDetails(roomId: string): Promise<Partial<RoomState>> {
     return new Promise((resolve) => {
-      this.#socket.emit('NEW_ROOM_NAME', roomId, (res: string) => {
-        resolve(res);
+      this.#socket.emit('NEW_ROOM_DETAILS', roomId, (res: Partial<RoomState>) => {
+        resolve({
+          roomName!: res.roomName,
+          roomOwner!: res.roomOwner
+        });
       });
     });
   };

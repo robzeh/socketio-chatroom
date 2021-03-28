@@ -24,7 +24,7 @@ const io = new Server(httpServer, {
 // next type: err?: ExtendedError, idk if to include
 io.use(socketMiddleware);
 
-const { onLogin, createRoom, joinRoom, leaveRoom, newRoom, newRoomName, getRooms, message, ready, disconnect } = Socket.default(io);
+const { onLogin, createRoom, joinRoom, leaveRoom, newRoom, newRoomDetails, getRooms, message, ready, disconnect } = Socket.default(io);
 
 io.on('connection', async (socket: MangaSocket) => {
   // emit session details to user
@@ -34,7 +34,7 @@ io.on('connection', async (socket: MangaSocket) => {
   socket.on('JOIN_ROOM', joinRoom);
   socket.on('LEAVE_ROOM', leaveRoom);
   socket.on('NEW_ROOM', newRoom);
-  socket.on('NEW_ROOM_NAME', newRoomName);
+  socket.on('NEW_ROOM_DETAILS', newRoomDetails);
   socket.on('GET_ROOMS', getRooms);
   socket.on('MESSAGE', message);
   socket.on('USER_READY', ready);

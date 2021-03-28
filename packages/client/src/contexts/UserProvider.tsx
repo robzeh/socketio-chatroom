@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { INITIAL_USER_DETAILS } from '../constants';
+import { INITIAL_USER_DETAILS } from '../models/constants';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { User, UserContextType } from '../models/types';
 

@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { roomStore, roomUserStore, sessionStore, publicRoomStore } from '../stores/stores';
-import { ChatMessage, MangaSocket, RoomListItem, RoomResponse, RoomUser, Session, SessionDetails } from '../types'
+import { ChatMessage, MangaSocket, RoomDetails, RoomListItem, RoomResponse, RoomUser, Session, SessionDetails } from '../types'
 
 export default function (io: Server) {
   // emit session details to user on login
@@ -164,11 +164,16 @@ export default function (io: Server) {
     cb(allRoomUsers);
   };
 
-  const newRoomName = async function (roomId: string, cb: (res: string) => void) {
+  const newRoomDetails = async function (roomId: string, cb: (res: RoomDetails) => void) {
     const roomName: string[] = await roomStore.getRoomName(roomId);
-    cb(roomName[0]);
+    const roomOwner: string[] = await roomStore.getRoomOwner(roomId);
+    cb({
+      roomName: roomName[0],
+      roomOwner: roomOwner[0]
+    });
   };
 
+  // room list
   const getRooms = async function (start: number, end: number, cb: (res: RoomListItem[]) => void) {
     const rooms: string[] = await publicRoomStore.getRooms(start, end);
 
@@ -228,7 +233,7 @@ export default function (io: Server) {
     joinRoom,
     leaveRoom,
     newRoom,
-    newRoomName,
+    newRoomDetails,
     getRooms,
     message,
     disconnect,

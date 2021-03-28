@@ -43,6 +43,11 @@ interface ChatMessage extends RoomUser {
   roomId: string
 };
 
+interface RoomDetails {
+  roomName: string,
+  roomOwner: string,
+};
+
 export {
   MangaSocket,
   Session,
@@ -50,5 +55,6 @@ export {
   RoomResponse,
   RoomUser,
   ChatMessage,
-  RoomListItem
+  RoomListItem,
+  RoomDetails
 };

@@ -5,7 +5,7 @@ import { SocketService } from '../services/SocketService';
 import { useUser } from '../contexts/UserProvider';
 import { useSocket } from '../contexts/SocketProvider';
 import { FaRegUser } from 'react-icons/fa';
-import { INITIAL_USER_DETAILS } from '../constants';
+import { INITIAL_USER_DETAILS } from '../models/constants';
 import { useHistory } from 'react-router';
 import { useRoom } from '../contexts/RoomProvider';
 

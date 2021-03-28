@@ -16,7 +16,7 @@ const RoomContent = ({ }: RoomContentProps) => {
   return (
     <Box w='70vw'>
       <Box h='80vh'>
-
+        {userDetails.sessionId === state.roomOwner && <div>I AM THE OWNER</div>}
       </Box>
       <RoomFooter />
     </Box>

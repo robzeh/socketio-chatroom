@@ -18,8 +18,8 @@ const Room = ({ roomId }: RoomProps) => {
   React.useEffect(() => {
     const getRoomDetails = async () => {
       const roomDetails: Partial<RoomState> = await socket.newRoomDetails(roomId);
-      dispatch({ type: 'roomName', payload!: roomDetails.roomName });
-      dispatch({ type: 'setOwner', payload!: roomDetails.roomOwner });
+      dispatch({ type: 'roomName', payload: roomDetails.roomName });
+      dispatch({ type: 'setOwner', payload: roomDetails.roomOwner });
     };
     getRoomDetails();
   }, []);

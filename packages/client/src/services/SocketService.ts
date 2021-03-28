@@ -85,8 +85,8 @@ class SocketService {
     return new Promise((resolve) => {
       this.#socket.emit('NEW_ROOM_DETAILS', roomId, (res: Partial<RoomState>) => {
         resolve({
-          roomName!: res.roomName,
-          roomOwner!: res.roomOwner
+          roomName: res.roomName,
+          roomOwner: res.roomOwner
         });
       });
     });

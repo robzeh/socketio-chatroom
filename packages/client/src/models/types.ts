@@ -77,7 +77,11 @@ type RoomAction =
   { type: 'userJoin' } |
   { type: 'userLeft' } |
   { type: 'userReady' } |
-  { type: 'reset' }
+  { type: 'reset' };
+
+interface MangaFormData {
+  file: FileList
+};
 
 // TODO: define events?
 interface ClientToServerEvents extends EventsMap {
@@ -102,5 +106,6 @@ export type {
   RoomState,
   RoomDispatch,
   RoomAction,
-  RoomContextType
+  RoomContextType,
+  MangaFormData
 };

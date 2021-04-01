@@ -12,10 +12,10 @@ const roomReducer = (state: RoomState, action: RoomAction) => {
   switch (action.type) {
     case 'roomName': {
       return { ...state, roomName: action.payload };
-    }
+    };
     case 'setUsers': {
       return { ...state, users: action.payload };
-    }
+    };
     case 'userJoin': {
       return { ...state, users: state.users + 1 };
     };
@@ -37,9 +37,9 @@ const roomReducer = (state: RoomState, action: RoomAction) => {
       };
     }
     default: {
-      throw new Error('Unhandled action type')
-    }
-  }
+      throw new Error('Unhandled action type');
+    };
+  };
 };
 
 const RoomProvider = ({ children }: RoomProviderProps) => {

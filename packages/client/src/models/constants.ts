@@ -13,4 +13,9 @@ const INITIAL_ROOM_STATE = {
   roomOwner: '',
 };
 
-export { INITIAL_USER_DETAILS, INITIAL_ROOM_STATE };
+const INITIAL_MANGA_STATE = {
+  pages: [], // Blob type?
+  currPage: 0
+};
+
+export { INITIAL_USER_DETAILS, INITIAL_ROOM_STATE, INITIAL_MANGA_STATE };

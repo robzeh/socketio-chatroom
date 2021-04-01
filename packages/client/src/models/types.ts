@@ -83,6 +83,25 @@ interface MangaFormData {
   file: FileList
 };
 
+interface MangaContextType {
+  state: MangaState,
+  dispatch: MangaDispatch
+};
+
+interface MangaState {
+  pages: Blob[], // blob array? then 
+  currPage: number,
+  //nextPage: () => void,
+  //prevPage: () => void,
+};
+
+type MangaDispatch = (action: MangaAction) => void;
+
+type MangaAction =
+  { type: 'setPages', payload: Blob } |
+  { type: 'nextPage' } |
+  { type: 'prevPage' };
+
 // TODO: define events?
 interface ClientToServerEvents extends EventsMap {
 };
@@ -107,5 +126,8 @@ export type {
   RoomDispatch,
   RoomAction,
   RoomContextType,
-  MangaFormData
+  MangaFormData,
+  MangaContextType,
+  MangaState,
+  MangaAction
 };

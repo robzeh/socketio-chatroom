@@ -54,7 +54,7 @@ const Users = ({ roomId }: UsersProps) => {
       userJoinSubscription.unsubscribe();
       userLeaveSubscription.unsubscribe();
     };
-  }, []);
+  }, [socket]);
 
   return (
     <Box h='20vh'>

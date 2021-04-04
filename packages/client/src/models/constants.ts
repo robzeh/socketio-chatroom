@@ -3,7 +3,8 @@ const INITIAL_USER_DETAILS = {
   sessionId: '',
   roomId: '',
   userId: '',
-  color: ''
+  color: '',
+  roomOwner: false,
 };
 
 const INITIAL_ROOM_STATE = {
@@ -15,6 +16,7 @@ const INITIAL_ROOM_STATE = {
 
 const INITIAL_MANGA_STATE = {
   pages: [], // Blob type?
+  page: undefined,
   currPage: 0
 };
 

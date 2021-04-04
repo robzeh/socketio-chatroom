@@ -37,7 +37,8 @@ const Home = ({ }: HomeProps) => {
         sessionId: user.sessionId,
         roomId: user.roomId,
         userId: user.userId,
-        color: user.color
+        color: user.color,
+        roomOwner: false // ok??
       });
     };
     login();

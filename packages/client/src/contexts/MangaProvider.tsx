@@ -13,6 +13,9 @@ const mangaReducer = (state: MangaState, action: MangaAction) => {
     case 'setPages': {
       return { ...state, pages: state.pages.concat([action.payload]) };
     };
+    case 'currPage': {
+      return { ...state, page: action.payload };
+    }
     case 'nextPage': {
       return { ...state, currPage: state.currPage + 1 };
     };

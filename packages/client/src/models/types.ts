@@ -5,7 +5,8 @@ interface User {
   sessionId: string,
   roomId: string,
   userId: string,
-  color: string
+  color: string,
+  roomOwner: boolean,
 };
 
 interface UserContextType {
@@ -91,6 +92,7 @@ interface MangaContextType {
 interface MangaState {
   pages: Blob[], // blob array? then 
   currPage: number,
+  page: Blob | undefined // for non owners
   //nextPage: () => void,
   //prevPage: () => void,
 };
@@ -99,6 +101,7 @@ type MangaDispatch = (action: MangaAction) => void;
 
 type MangaAction =
   { type: 'setPages', payload: Blob } |
+  { type: 'currPage', payload: Blob } |
   { type: 'nextPage' } |
   { type: 'prevPage' };
 
